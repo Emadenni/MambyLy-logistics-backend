@@ -2,6 +2,75 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "The AWS CloudFormation template for this Serverless application",
   "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ServerlessDeploymentBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      }
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "TestLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
@@ -101,8 +170,10 @@
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
-          "S3Bucket": "serverless-framework-deployments-eu-north-1-fc89e287-873f",
-          "S3Key": "serverless/db-booker-backend/dev/1737026053795-2025-01-16T11:14:13.795Z/db-booker-backend.zip"
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/db-booker-backend/dev/1737035963212-2025-01-16T13:59:23.212Z/db-booker-backend.zip"
         },
         "Handler": "handlers/test/test.handler",
         "Runtime": "nodejs18.x",
@@ -120,14 +191,14 @@
         "TestLogGroup"
       ]
     },
-    "TestLambdaVersionUEPEqye3B2LN6WTd1NDY6kg2oBr7El8SpJyEOqfoGXA": {
+    "TestLambdaVersion35hS5QPM2WjLDEjpRnaG1VjRtrGv6zULdi9VTyKuxww": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "TestLambdaFunction"
         },
-        "CodeSha256": "69y1ZVIuvthxqr5swf3tZakwmiXYJMybCBu5AdS1mx4="
+        "CodeSha256": "luLlwIpWAw9/9AiQiyfHz/2dPgQB7ew3LESK/G9XPuM="
       }
     },
     "ApiGatewayRestApi": {
@@ -203,7 +274,7 @@
         "TestLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1737026041790": {
+    "ApiGatewayDeployment1737035951385": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -255,7 +326,9 @@
   },
   "Outputs": {
     "ServerlessDeploymentBucketName": {
-      "Value": "serverless-framework-deployments-eu-north-1-fc89e287-873f",
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      },
       "Export": {
         "Name": "sls-db-booker-backend-dev-ServerlessDeploymentBucketName"
       }
@@ -263,7 +336,7 @@
     "TestLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "TestLambdaVersionUEPEqye3B2LN6WTd1NDY6kg2oBr7El8SpJyEOqfoGXA"
+        "Ref": "TestLambdaVersion35hS5QPM2WjLDEjpRnaG1VjRtrGv6zULdi9VTyKuxww"
       },
       "Export": {
         "Name": "sls-db-booker-backend-dev-TestLambdaFunctionQualifiedArn"

@@ -3,9 +3,10 @@ service: db-booker-backend
 provider:
   name: aws
   runtime: nodejs18.x  
-  region: eu-north-1  
-  profile: personal  
   stage: dev
+  region: ${env:AWS_REGION} 
+   
+  
 
   iamRoleStatements:
     - Effect: Allow
@@ -25,5 +26,3 @@ functions:
           path: test 
           method: get  
 
-plugins:
-  - serverless-offline
