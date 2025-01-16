@@ -191,7 +191,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/db-booker-backend/dev/1737034077527-2025-01-16T13:27:57.527Z/db-booker-backend.zip"
+                "S3Key": "serverless/db-booker-backend/dev/1737035963212-2025-01-16T13:59:23.212Z/db-booker-backend.zip"
               },
               "Handler": "handlers/test/test.handler",
               "Runtime": "nodejs18.x",
@@ -292,7 +292,7 @@
               "TestLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1737034066454": {
+          "ApiGatewayDeployment1737035951385": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -510,7 +510,7 @@
     "artifact": "C:\\Users\\emanu\\Db-Booker-backend\\.serverless\\db-booker-backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/db-booker-backend/dev/1737034077527-2025-01-16T13:27:57.527Z",
+    "artifactDirectoryName": "serverless/db-booker-backend/dev/1737035963212-2025-01-16T13:59:23.212Z",
     "artifact": "db-booker-backend.zip"
   }
 }
