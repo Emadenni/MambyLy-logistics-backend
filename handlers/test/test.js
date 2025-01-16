@@ -1,4 +1,4 @@
-//testing handler
+/* //testing handler */
 export const handler = async (event) => {
   return {
     statusCode: 200,
