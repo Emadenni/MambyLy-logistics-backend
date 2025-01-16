@@ -13,6 +13,8 @@ permissions:
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   deploy:
@@ -30,13 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Export AWS credentials
+      - name: Deploy with Serverless
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $GITHUB_ENV
-          echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_ENV
-
-      - name: Deploy with Serverless
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: npx serverless deploy --stage dev --region $AWS_REGION
