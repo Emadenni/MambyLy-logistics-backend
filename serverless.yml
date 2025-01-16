@@ -1,0 +1,29 @@
+service: db-booker-backend  
+
+provider:
+  name: aws
+  runtime: nodejs18.x  
+  region: eu-north-1  
+  profile: personal  
+  stage: dev
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+        - lambda:CreateFunction
+        - lambda:UpdateFunctionCode
+        - apiGateway:*
+        - s3:*
+      Resource: "*"
+
+functions:
+  test:
+    handler: handlers/test/test.handler 
+    events:
+      - http:
+          path: test 
+          method: get  
+
+plugins:
+  - serverless-offline
