@@ -25,5 +25,3 @@ functions:
           path: test 
           method: get  
 
-plugins:
-  - serverless-offline
