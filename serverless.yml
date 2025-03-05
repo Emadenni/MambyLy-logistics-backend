@@ -1,4 +1,4 @@
-service: db-booker-backend  
+service: MambyLy-logistics-backend 
 
 provider:
   name: aws
