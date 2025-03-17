@@ -1,12 +1,10 @@
-service: MambyLy-logistics-backend 
+service: MambyLy-logistics-backend
 
 provider:
   name: aws
   runtime: nodejs18.x  
   stage: dev
   region: ${env:AWS_REGION} 
-   
-  
 
   iamRoleStatements:
     - Effect: Allow
@@ -14,9 +12,21 @@ provider:
         - lambda:InvokeFunction
         - lambda:CreateFunction
         - lambda:UpdateFunctionCode
-        - apiGateway:*
-        - s3:*
-      Resource: "*"
+        - apigateway:*
+        - s3:PutObject
+        - s3:GetObject
+        - s3:DeleteObject
+        - s3:ListBucket
+      Resource:
+        - arn:aws:s3:::mambyly-uploads-${self:provider.stage}
+        - arn:aws:s3:::mambyly-uploads-${self:provider.stage}/*
+
+resources:
+  Resources:
+    UploadsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: mambyly-uploads-${self:provider.stage}
 
 functions:
   test:
@@ -24,5 +34,4 @@ functions:
     events:
       - http:
           path: test 
-          method: get  
-
+          method: get
