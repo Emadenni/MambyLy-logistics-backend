@@ -1,7 +1,7 @@
-import { putItem } from "../utils/dbUtils";
-import { uploadProfileImg } from "./ProfileImgService";
-import { v4 as uuidv4 } from "uuid";
-import bcrypt from "bcryptjs";
+import * as db from "../utils/dbUtils"
+import { uploadProfileImg } from "./ProfileImgService"; // Funzione per il caricamento dell'immagine
+import { v4 as uuidv4 } from "uuid"; // Per generare un ID unico
+import bcrypt from "bcryptjs"; // Per il hashing delle password
 
 export const registerAdmin = async (adminData) => {
   const { firstName, lastName, email, password, profileImage } = adminData;
@@ -11,6 +11,7 @@ export const registerAdmin = async (adminData) => {
   }
 
   const adminId = uuidv4();
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   let imageUrl = "";
@@ -39,7 +40,8 @@ export const registerAdmin = async (adminData) => {
   };
 
   try {
-    await putItem(params);
+    await db.putItem(params);
+
     return { adminId, firstName, lastName, email, role: "superadmin" };
   } catch (error) {
     throw new Error("Error registering admin: " + error.message);

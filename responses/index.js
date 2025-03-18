@@ -1,24 +1,18 @@
-const successResponse = (data) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: "Success",
-      data: data,
-    }),
-  };
-};
+import { registerAdmin } from "../../services/adminServices";
+import { successResponse, errorResponse } from "../responses/index";
 
-const errorResponse = (message, statusCode = 500) => {
-  return {
-    statusCode: statusCode,
-    body: JSON.stringify({
-      message: message,
-      error: message,
-    }),
-  };
-};
+export const registerAdminHandler = async (event) => {
+  try {
+    const adminData = JSON.parse(event.body);
 
-module.exports = {
-  successResponse,
-  errorResponse,
+    const admin = await registerAdmin(adminData);
+
+    return successResponse({
+      message: "Admin registered successfully",
+      admin,
+    });
+  } catch (error) {
+    console.error("Error registering admin: ", error.message);
+    return errorResponse(error.message || "Internal server error", error.statusCode || 500);
+  }
 };
