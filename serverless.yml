@@ -1,12 +1,13 @@
-service: MambyLy-logistics-backend 
+service: MambyLy-logistics-backend
 
 provider:
   name: aws
-  runtime: nodejs18.x  
+  runtime: nodejs18.x
   region: ${env:AWS_REGION}
-  stage: ${opt:stage, 'dev'}  
+  stage: ${opt:stage, 'dev'}
   environment:
-    S3_BUCKET: ${self:provider.stage}-mamby-uploads  
+    BUCKET_NAME: ${env:S3_BUCKET_BASE}-${self:provider.stage}
+    ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -15,19 +16,29 @@ provider:
         - lambda:UpdateFunctionCode
         - apiGateway:*
         - s3:*
+        - dynamodb:*
       Resource: "*"
-
-resources:
-  Resources:
-    FileUploadBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:provider.environment.S3_BUCKET}  # Usa variabile per il nome del bucket
 
 functions:
   test:
     handler: handlers/test/test.handler
     events:
       - http:
-          path: test 
-          method: get  
+          path: test
+          method: get
+
+resources:
+  Resources:
+    AdminTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.ADMIN_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: adminId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: adminId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
