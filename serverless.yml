@@ -33,7 +33,7 @@ functions:
         - node_modules/**
 
   registerAdmin:
-    handler: handlers/registerAdmin/index.handler
+    handler: handlers/registerAdmin/index.registerAdminHandler
     events:
       - http:
           path: admin/register
