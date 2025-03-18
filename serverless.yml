@@ -27,7 +27,6 @@ functions:
           path: test
           method: get
 
-  functions:
   registerAdmin:
     handler: register/index.handler
     events:
