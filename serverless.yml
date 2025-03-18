@@ -61,6 +61,12 @@ resources:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
 
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.BUCKET_NAME}
+        AccessControl: Private
+
 package:
   individually: true
   include:
