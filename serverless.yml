@@ -28,7 +28,7 @@ functions:
           method: get
 
   registerAdmin:
-    handler: registerAdmin/index.handler
+    handler: handlers/registerAdmin/index.handler
     events:
       - http:
           path: admin/register
