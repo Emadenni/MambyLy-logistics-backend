@@ -5,9 +5,9 @@ import bcrypt from "bcryptjs";
 
 export const handler = async (event) => {
   try {
-    const { name, email, password, profileImage } = JSON.parse(event.body);
+    const { firstName, lastName, email, password, profileImage } = JSON.parse(event.body);
 
-    if (!name || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
       return {
         statusCode: 400,
         body: JSON.stringify({ message: "Missing required fields" }),
@@ -31,7 +31,8 @@ export const handler = async (event) => {
 
     const adminData = {
       adminId,
-      name,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
       profileImageUrl: imageUrl,
