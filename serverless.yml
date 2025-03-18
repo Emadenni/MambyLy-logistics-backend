@@ -26,6 +26,11 @@ functions:
       - http:
           path: test
           method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
 
   registerAdmin:
     handler: handlers/registerAdmin/index.handler
@@ -34,6 +39,11 @@ functions:
           path: admin/register
           method: post
           cors: true
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
 
 resources:
   Resources:
@@ -50,3 +60,10 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+
+package:
+  individually: true
+  include:
+    - services/**
+    - handlers/**
+    - node_modules/**
