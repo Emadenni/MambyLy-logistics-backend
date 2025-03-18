@@ -17,22 +17,24 @@ const getFileExtension = (mimetype) => {
 };
 
 export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
-  const buffer = Buffer.from(base64Image, 'base64');  
-  const fileExtension = getFileExtension(mimetype);  
+  const buffer = Buffer.from(base64Image, 'base64');
+  const fileExtension = getFileExtension(mimetype);
   const fileName = `profile-images/${adminId}.${fileExtension}`;
 
   const params = {
     Bucket: bucketName,
     Key: fileName,
     Body: buffer,
-    ContentType: mimetype, 
+    ContentType: mimetype,
     ACL: "public-read",
   };
 
   try {
     const data = await S3.upload(params).promise();
-    return data.Location; 
+    console.log("Upload success:", data);  
+    return data.Location;
   } catch (error) {
+    console.error("Error details:", error);  
     throw new Error("Error uploading profile image: " + error.message);
   }
 };
