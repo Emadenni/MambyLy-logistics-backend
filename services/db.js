@@ -1,10 +1,10 @@
-import { DynamoDB } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-const client = new DynamoDB({
+const client = new DynamoDBClient({
   region: process.env.AWS_REGION,
 });
 
-const db = DynamoDBDocument.from(client);
+const db = DynamoDBDocumentClient.from(client);
 
-export { db };
+export default db;

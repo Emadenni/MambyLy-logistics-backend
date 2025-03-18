@@ -1,4 +1,4 @@
-import { db } from "../../services/db";
+import db from "../../services/db";
 import { uploadProfileImg } from "../../services/ProfileImgService";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
