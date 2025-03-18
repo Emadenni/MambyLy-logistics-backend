@@ -1,7 +1,7 @@
 import * as db from "../utils/dbUtils.js"
-import { uploadProfileImg } from "./ProfileImgService"; // Funzione per il caricamento dell'immagine
-import { v4 as uuidv4 } from "uuid"; // Per generare un ID unico
-import bcrypt from "bcryptjs"; // Per il hashing delle password
+import { uploadProfileImg } from "./ProfileImgService.js";
+import { v4 as uuidv4 } from "uuid"; 
+import bcrypt from "bcryptjs"; 
 
 export const registerAdmin = async (adminData) => {
   const { firstName, lastName, email, password, profileImage } = adminData;
