@@ -27,6 +27,15 @@ functions:
           path: test
           method: get
 
+  functions:
+  registerAdmin:
+    handler: register/index.handler
+    events:
+      - http:
+          path: admin/register
+          method: post
+          cors: true
+
 resources:
   Resources:
     AdminTable:
