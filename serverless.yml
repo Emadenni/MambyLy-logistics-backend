@@ -6,8 +6,8 @@ provider:
   region: ${env:AWS_REGION}
   stage: ${opt:stage, 'dev'}
   environment:
-    BUCKET_BASE: ${env:S3_BUCKET_BASE}
     BUCKET_NAME: ${env:S3_BUCKET_BASE}-${self:provider.stage}
+    ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -16,6 +16,7 @@ provider:
         - lambda:UpdateFunctionCode
         - apiGateway:*
         - s3:*
+        - dynamodb:*
       Resource: "*"
 
 functions:
@@ -25,3 +26,19 @@ functions:
       - http:
           path: test
           method: get
+
+resources:
+  Resources:
+    AdminTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.ADMIN_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: adminId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: adminId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
