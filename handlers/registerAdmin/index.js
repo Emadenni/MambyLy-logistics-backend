@@ -1,4 +1,4 @@
-import { registerAdmin } from "../../services/adminServices";
+import { registerAdmin } from "../../services/adminServices.js";
 
 
 export const registerAdminHandler = async (event) => {
