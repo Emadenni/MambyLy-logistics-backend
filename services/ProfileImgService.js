@@ -17,7 +17,8 @@ const getFileExtension = (mimetype) => {
 };
 
 export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
-  const buffer = Buffer.from(base64Image, 'base64');
+  const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
+  const buffer = Buffer.from(base64Data, 'base64');
   const fileExtension = getFileExtension(mimetype);
   const fileName = `profile-images/${adminId}.${fileExtension}`;
 
@@ -38,6 +39,7 @@ export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
     throw new Error("Error uploading profile image: " + error.message);
   }
 };
+
 
 export const deleteProfileImg = async (adminId) => {
   const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];
