@@ -1,0 +1,47 @@
+import { putItem } from "../utils/dbUtils";
+import { uploadProfileImg } from "./ProfileImgService";
+import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcryptjs";
+
+export const registerAdmin = async (adminData) => {
+  const { firstName, lastName, email, password, profileImage } = adminData;
+
+  if (!firstName || !lastName || !email || !password) {
+    throw new Error("Missing required fields");
+  }
+
+  const adminId = uuidv4();
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  let imageUrl = "";
+  if (profileImage) {
+    try {
+      imageUrl = await uploadProfileImg(profileImage, adminId);
+    } catch (error) {
+      throw new Error("Error uploading profile image");
+    }
+  }
+
+  const admin = {
+    adminId,
+    firstName,
+    lastName,
+    email,
+    password: hashedPassword,
+    profileImageUrl: imageUrl,
+    role: "superadmin",
+    createdAt: new Date().toISOString(),
+  };
+
+  const params = {
+    TableName: process.env.ADMIN_TABLE_NAME,
+    Item: admin,
+  };
+
+  try {
+    await putItem(params);
+    return { adminId, firstName, lastName, email, role: "superadmin" };
+  } catch (error) {
+    throw new Error("Error registering admin: " + error.message);
+  }
+};

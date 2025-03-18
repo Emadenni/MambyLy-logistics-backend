@@ -1,55 +1,22 @@
-import db from "../../services/db";
-import { uploadProfileImg } from "../../services/ProfileImgService";
-import { v4 as uuidv4 } from "uuid";
-import bcrypt from "bcryptjs";
+import { registerAdmin } from "../../services/adminServices";
 
 export const handler = async (event) => {
   try {
     const { firstName, lastName, email, password, profileImage } = JSON.parse(event.body);
 
-    if (!firstName || !lastName || !email || !password) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ message: "Missing required fields" }),
-      };
-    }
-
-    const adminId = uuidv4();
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    let imageUrl = "";
-    if (profileImage) {
-      try {
-        imageUrl = await uploadProfileImg(profileImage, adminId);
-      } catch (error) {
-        return {
-          statusCode: 500,
-          body: JSON.stringify({ message: "Error uploading profile image" }),
-        };
-      }
-    }
-
     const adminData = {
-      adminId,
       firstName,
       lastName,
       email,
-      password: hashedPassword,
-      profileImageUrl: imageUrl,
-      role: "superadmin",
-      createdAt: new Date().toISOString(),
+      password,
+      profileImage,
     };
 
-    const params = {
-      TableName: process.env.ADMIN_TABLE_NAME,
-      Item: adminData,
-    };
-
-    await db.put(params);
+    const result = await registerAdmin(adminData); 
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Super admin registered successfully" }),
+      body: JSON.stringify({ message: "Super admin registered successfully", data: result }),
     };
   } catch (error) {
     return {
