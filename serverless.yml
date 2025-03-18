@@ -1,12 +1,13 @@
-service: MambyLy-logistics-backend 
+service: MambyLy-logistics-backend
 
 provider:
   name: aws
   runtime: nodejs18.x  
   region: ${env:AWS_REGION}
-  stage: ${opt:stage, 'dev'}  
+  stage: ${opt:stage, 'dev'}
   environment:
-    S3_BUCKET: ${self:provider.stage}-mamby-uploads  
+    BUCKET_BASE: ${env:S3_BUCKET_BASE}  
+    BUCKET_NAME: ${env:S3_BUCKET_BASE}-${self:provider.stage}  
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -22,7 +23,7 @@ resources:
     FileUploadBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:provider.environment.S3_BUCKET}  # Usa variabile per il nome del bucket
+        BucketName: ${self:provider.environment.BUCKET_NAME}  
 
 functions:
   test:
@@ -30,4 +31,4 @@ functions:
     events:
       - http:
           path: test 
-          method: get  
+          method: get
