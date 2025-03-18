@@ -2,7 +2,7 @@ service: MambyLy-logistics-backend
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   region: ${env:AWS_REGION}
   stage: ${opt:stage, 'dev'}
   environment:
