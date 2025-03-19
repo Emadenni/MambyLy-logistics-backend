@@ -39,14 +39,24 @@ functions:
       - http:
           path: admin/register
           method: post
-          cors: true
+          cors:
+            origin: "*"  
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Requested-With
   loginAdmin:
     handler: handlers/loginAdmin/index.handler
     events:
       - http:
           path: admin/login
           method: post
-          cors: true
+          cors:
+            origin: "*"  
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Requested-With
     package:
       include:
         - services/**
