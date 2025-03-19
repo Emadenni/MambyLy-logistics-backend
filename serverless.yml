@@ -23,7 +23,7 @@ provider:
         - PUT
         - DELETE
         - OPTIONS
-    
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -40,7 +40,7 @@ functions:
     handler: handlers/test/test.handler
     events:
       - httpApi:
-          path: test
+          path: /test
           method: get
     package:
       include:
@@ -54,14 +54,14 @@ functions:
       - httpApi:
           path: /admin/register
           method: post
-          
+
   loginAdmin:
     handler: handlers/loginAdmin/index.handler
     events:
-      - http:
+      - httpApi:
           path: /admin/login
           method: post
-          
+
     package:
       include:
         - services/**
@@ -90,7 +90,6 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-        
 
 package:
   individually: true
