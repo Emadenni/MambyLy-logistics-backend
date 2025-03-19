@@ -1,18 +1,22 @@
 import jwt from "jsonwebtoken";
 import { sendError } from "../responses/index.js";
 
-export const verifyJWT = (event, context, callback) => {
-  const token = event.headers.Authorization;
+export const auth = () => {
+  return {
+    before: async (request) => {
+      try {
+        const authHeader = request.event.headers.Authorization || request.event.headers.authorization;
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+          throw new Error("Missing or invalid authorization header");
+        }
 
-  if (!token) {
-    return sendError(401, "No token provided");
-  }
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);  
-    event.user = decoded; 
-    callback();  
-  } catch (error) {
-    return sendError(401, "Invalid or expired token");
-  }
+        request.event.user = decoded; 
+      } catch (error) {
+        return sendError(401, "Unauthorized: " + error.message);
+      }
+    },
+  };
 };
