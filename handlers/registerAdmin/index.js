@@ -1,8 +1,9 @@
 import middy from "@middy/core";
 import { registerAdmin } from "../../services/adminServices.js";
-import { sendSuccessResponse, sendError} from "../../responses/index.js" ;
+import { sendSuccessResponse, sendError } from "../../responses/index.js";
 import { validationAdmin } from "../../middlewares/validationAdmin.js";
 import { adminSchema } from "../../utils/adminSchema.js";
+import { auth } from "../../middlewares/auth.js";
 
 const registerAdminHandler = async (event) => {
   try {
@@ -18,4 +19,4 @@ const registerAdminHandler = async (event) => {
   }
 };
 
-export const handler = middy(registerAdminHandler).use(validationAdmin(adminSchema));
+export const handler = middy(registerAdminHandler).use(auth()).use(validationAdmin(adminSchema));
