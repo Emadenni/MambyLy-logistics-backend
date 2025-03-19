@@ -1,6 +1,6 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../responses/index.js";
-import { loginAdmin } from "../../services/AdminService.js";
+import { loginAdmin } from "../../services/adminServices.js";
 import { validationAdmin } from "../../middlewares/validationAdmin.js";
 import { loginSchema } from "../../utils/adminSchema.js";
 
