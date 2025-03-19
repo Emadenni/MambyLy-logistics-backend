@@ -1,4 +1,4 @@
-import Joi from "@hapi/joi";
+import Joi from "joi";
 
 export const validate = async (schema, data) => {
   const { error, value } = schema.validate(data, { abortEarly: false });

@@ -1,4 +1,4 @@
-import Joi from "@hapi/joi";
+import Joi from "joi";
 
 export const adminSchema = Joi.object({
   firstName: Joi.string().min(2).max(50).required(),
