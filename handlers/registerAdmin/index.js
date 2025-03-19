@@ -18,4 +18,4 @@ const registerAdminHandler = async (event) => {
   }
 };
 
-export const handler = middy(registerAdminHandler).use(validationMiddleware(adminSchema));
+export const handler = middy(registerAdminHandler).use(validationAdmin(adminSchema));
