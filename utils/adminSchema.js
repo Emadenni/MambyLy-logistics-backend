@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from "joi"; //to deploy
 
 export const adminSchema = Joi.object({
   firstName: Joi.string().min(2).max(50).required(),
