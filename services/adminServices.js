@@ -90,6 +90,8 @@ export const loginAdmin = async (loginData) => {
     throw new Error("Invalid password");
   }
 
+  console.log("Returning admin:", admin);
+
   const token = jwt.sign({ adminId: admin.adminId, role: admin.role }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
   return {

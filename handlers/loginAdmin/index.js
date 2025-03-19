@@ -4,17 +4,18 @@ import { loginAdmin } from "../../services/adminServices.js";
 import { validationAdmin } from "../../middlewares/validationAdmin.js";
 import { loginSchema } from "../../utils/adminSchema.js";
 
-
 export const loginAdminHandler = async (event) => {
-    const { email, password } = event.body;  
+  console.log("Event body:", event.body);
+  const { email, password } = event.body;
 
-    try {
-      const admin = await loginAdmin({ email, password });
-      return sendSuccessResponse(admin);
-    } catch (error) {
-      return sendError(400, error.message);
-    }
-  };
-
+  try {
+    const admin = await loginAdmin({ email, password });
+    console.log("Admin found:", admin);
+    return sendSuccessResponse(admin);
+  } catch (error) {
+    console.error("Error during login:", error);
+    return sendError(400, error.message);
+  }
+};
 
 export const handler = middy(loginAdminHandler).use(validationAdmin(loginSchema));
