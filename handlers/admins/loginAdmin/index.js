@@ -1,8 +1,8 @@
 import middy from "@middy/core";
-import { sendSuccessResponse, sendError } from "../../responses/index.js";
-import { loginAdmin } from "../../services/adminServices.js";
-import { validationAdmin } from "../../middlewares/validationAdmin.js";
-import { loginSchema } from "../../utils/adminSchema.js";
+import { sendSuccessResponse, sendError } from "../../../responses/index.js";
+import { loginAdmin } from "../../../services/adminServices.js";
+import { validation } from "../../../middlewares/validation.js";
+import { loginSchema } from "../../../utils/adminSchema.js";
 
 export const loginAdminHandler = async (event) => {
   console.log("Event body:", event.body);
@@ -21,4 +21,4 @@ export const loginAdminHandler = async (event) => {
   }
 };
 
-export const handler = middy(loginAdminHandler).use(validationAdmin(loginSchema));
+export const handler = middy(loginAdminHandler).use(validation(loginSchema));

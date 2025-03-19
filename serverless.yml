@@ -1,4 +1,4 @@
-service: MambyLy-logistics-backend
+service: MambyLy-Logistics
 
 provider:
   name: aws
@@ -8,6 +8,7 @@ provider:
   environment:
     BUCKET_NAME: ${env:S3_BUCKET_BASE}-${self:provider.stage}
     ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
+    CLIENTS_MESSAGES_NAME: ${env:CLIENTS_MESSAGES_BASE}-${self:provider.stage} 
     JWT_SECRET_KEY: ${env:JWT_SECRET_KEY}
 
   httpApi:
@@ -49,19 +50,71 @@ functions:
         - node_modules/**
 
   registerAdmin:
-    handler: handlers/registerAdmin/index.handler
+    handler: handlers/admins/registerAdmin/index.handler
     events:
       - httpApi:
           path: /admin/register
           method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
 
   loginAdmin:
-    handler: handlers/loginAdmin/index.handler
+    handler: handlers/admins/loginAdmin/index.handler
     events:
       - httpApi:
           path: /admin/login
           method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
 
+  postClientMessage:
+    handler: handlers/clientsMessages/postClientMessage/index.handler
+    events:
+      - httpApi:
+          path: /clientsMessages
+          method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  deleteClientMessage:
+    handler: handlers/clientsMessages/deleteClientMessage/index.handler
+    events:
+      - httpApi:
+          path: /clientsMessages/{clientMessageId}
+          method: delete
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getClientMessage:
+    handler: handlers/clientsMessages/getClientMessage/index.handler
+    events:
+      - httpApi:
+          path: /clientsMessages/{clientMessageId}
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getAllClientsMessages:
+    handler: handlers/clientsMessages/getAllClientsMessages/index.handler
+    events:
+      - httpApi:
+          path: /clientsMessages
+          method: get
     package:
       include:
         - services/**
@@ -91,9 +144,17 @@ resources:
             Projection:
               ProjectionType: ALL
 
-package:
-  individually: true
-  include:
-    - services/**
-    - handlers/**
-    - node_modules/**
+    ClientsMessagesTable: 
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.CLIENTS_MESSAGES_NAME}
+        AttributeDefinitions:
+          - AttributeName: clientMessageId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: clientMessageId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: sentAt
+          Enabled: true
