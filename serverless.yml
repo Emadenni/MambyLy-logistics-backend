@@ -8,6 +8,22 @@ provider:
   environment:
     BUCKET_NAME: ${env:S3_BUCKET_BASE}-${self:provider.stage}
     ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
+    JWT_SECRET_KEY: ${env:JWT_SECRET_KEY}
+
+  httpApi:
+    cors:
+      allowedOrigins:
+        - "*"
+      allowedHeaders:
+        - Content-Type
+        - authorization
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -23,8 +39,8 @@ functions:
   test:
     handler: handlers/test/test.handler
     events:
-      - http:
-          path: test
+      - httpApi:
+          path: /test
           method: get
     package:
       include:
@@ -35,10 +51,17 @@ functions:
   registerAdmin:
     handler: handlers/registerAdmin/index.handler
     events:
-      - http:
-          path: admin/register
+      - httpApi:
+          path: /admin/register
           method: post
-          cors: true
+
+  loginAdmin:
+    handler: handlers/loginAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/login
+          method: post
+
     package:
       include:
         - services/**
@@ -67,7 +90,6 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-        
 
 package:
   individually: true

@@ -1,19 +1,18 @@
-import middy from "@middy/core";
-import httpErrorHandler from "@middy/http-error-handler";
+import jwt from "jsonwebtoken";
+import { sendError } from "../responses/index.js";
 
-const auth = () => {
-    return {
-        before: async (request) => {
-            const { event } = request;
-            const admin = event.requestContext?.authorizer?.principalId; 
+export const verifyJWT = (event, context, callback) => {
+  const token = event.headers.Authorization;
 
-            if (!admin) {
-                throw new Error ("Unauthorized");
-            }
+  if (!token) {
+    return sendError(401, "No token provided");
+  }
 
-            request.event.adminId = admin;
-        }
-    };
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);  
+    event.user = decoded; 
+    callback();  
+  } catch (error) {
+    return sendError(401, "Invalid or expired token");
+  }
 };
-
-export default auth;
