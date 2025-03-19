@@ -6,7 +6,7 @@ import { clientMessageSchema } from "../../../utils/clientMessageSchema.js";
 
 const postClientMessageHandler = async (event) => {
   try {
-    const messageData = JSON.parse(event.body);
+    const messageData = event.body;
     const response = await postClientMessage(messageData);
 
     return sendSuccessResponse(201, {

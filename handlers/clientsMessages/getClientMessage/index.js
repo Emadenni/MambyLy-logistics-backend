@@ -5,9 +5,9 @@ import { getClientMessage } from "../../../services/clientsMessagesService.js";
 
 const getClientMessageHandler = async (event) => {
     try {
-      const { messageId } = event.queryStringParameters;
+      const { clientMessageId } = event.queryStringParameters;
   
-      const message = await getClientMessage(messageId);
+      const message = await getClientMessage(clientMessageId);
   
       return sendSuccessResponse(200, message);
     } catch (error) {
