@@ -15,7 +15,7 @@ export const auth = () => {
 
         request.event.user = decoded; 
       } catch (error) {
-        return sendError(401, "Unauthorized: " + error.message);
+        throw new Error("Unauthorized: " + error.message); 
       }
     },
   };
