@@ -7,3 +7,8 @@ export const adminSchema = Joi.object({
   password: Joi.string().min(6).required(),
   profileImage: Joi.string().uri().optional(),
 });
+
+export const loginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+});

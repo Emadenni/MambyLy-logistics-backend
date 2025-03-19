@@ -39,6 +39,13 @@ functions:
           path: admin/register
           method: post
           cors: true
+  loginAdmin:
+    handler: handlers/loginAdmin/index.handler
+    events:
+      - http:
+          path: admin/login
+          method: post
+          cors: true
     package:
       include:
         - services/**
