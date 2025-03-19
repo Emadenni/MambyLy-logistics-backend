@@ -12,9 +12,7 @@ export const loginAdminHandler = async (event) => {
     const admin = await loginAdmin({ email, password });
     console.log("Admin found:", admin.token);
     return sendSuccessResponse(200, {
-      admin: {
-        adminId: admin.adminId,
-      },
+      adminId: admin.adminId,
       token: admin.token,
     });
   } catch (error) {
