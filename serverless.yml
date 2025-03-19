@@ -6,7 +6,7 @@ provider:
   environment:
     BUCKET_NAME: ${env:S3_BUCKET_BASE}-${self:provider.stage}
     ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
-    CLIENTS_MESSAGES_NAME: ${env:CLIENTS_MESSAGES_TABLE_BASE}-${self:provider.stage} 
+    CLIENTS_MESSAGES_NAME: ${env:CLIENTS_MESSAGES_BASE}-${self:provider.stage} 
     JWT_SECRET_KEY: ${env:JWT_SECRET_KEY}
 
   httpApi:
