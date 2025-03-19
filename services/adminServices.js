@@ -20,8 +20,8 @@ export const registerAdmin = async (adminData) => {
   };
 
   const existingAdmins = await db.queryItems(checkEmailParams);
-  if(existingAdmins.lenght > 0) {
-    throw new Error ("Email Already in use");
+  if (existingAdmins.Items && existingAdmins.Items.length > 0) {
+    throw new Error("Email Already in use");
   }
 
   const adminId = uuidv4();
@@ -44,7 +44,7 @@ export const registerAdmin = async (adminData) => {
     email,
     password: hashedPassword,
     profileImageUrl: imageUrl,
-    role: "superadmin",
+    role: "admin",
     createdAt: new Date().toISOString(),
   };
 
