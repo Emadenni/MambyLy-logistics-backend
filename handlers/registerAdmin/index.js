@@ -1,30 +1,21 @@
+import middy from "@middy/core";
 import { registerAdmin } from "../../services/adminServices.js";
+import { sendSuccessResponse, sendError} from "../../responses/index.js" ;
+import { validationAdmin } from "../../middlewares/validationAdmin.js";
+import { adminSchema } from "../../utils/adminSchema.js";
 
-
-export const registerAdminHandler = async (event) => {
+const registerAdminHandler = async (event) => {
   try {
-
-    const adminData = JSON.parse(event.body);
-
-
+    const adminData = event.body;
     const admin = await registerAdmin(adminData);
 
-
-    return {
-      statusCode: 201,
-      body: JSON.stringify({
-        message: "Admin registered successfully",
-        admin,  
-      }),
-    };
+    return sendSuccessResponse(201, {
+      message: "Admin registered successfully",
+      admin,
+    });
   } catch (error) {
-
-    console.error("Error registering admin: ", error.message);
-    return {
-      statusCode: error.statusCode || 500,
-      body: JSON.stringify({
-        message: error.message || "Internal server error",
-      }),
-    };
+    return sendError(500, error.message || "Internal server error");
   }
 };
+
+export const handler = middy(registerAdminHandler).use(validationAdmin(adminSchema));
