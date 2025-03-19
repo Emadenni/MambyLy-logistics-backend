@@ -1,7 +1,7 @@
 import { sendError } from "../responses/index.js";
 import { validate } from "../utils/validationUtils.js"
 
-export const validationAdmin = (schema, type = "body") => ({
+export const validation = (schema, type = "body") => ({
   before: async (handler) => {
     try {
       const dataToValidate =
