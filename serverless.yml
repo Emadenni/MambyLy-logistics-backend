@@ -67,7 +67,7 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
-        DeletionPolicy: Retain
+        
 
 package:
   individually: true
