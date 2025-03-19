@@ -22,7 +22,7 @@ export const postClientMessage = async (messageData) => {
   };
 
   const params = {
-    TableName: process.env.CLIENTS_MESSAGES_TABLE,
+    TableName: process.env.CLIENTS_MESSAGES_NAME,
     Item: message,
   };
 
@@ -45,7 +45,7 @@ export const deleteClientMessage = async (clientMessageId) => {
   }
 
   const params = {
-    TableName: process.env.CLIENTS_MESSAGES_TABLE,
+    TableName: process.env.CLIENTS_MESSAGES_NAME,
     Key: {
       clientMessageId,  
     },
@@ -69,7 +69,7 @@ export const getClientMessage = async (clientMessageId) => {
   }
 
   const params = {
-    TableName: process.env.CLIENTS_MESSAGES_TABLE,
+    TableName: process.env.CLIENTS_MESSAGES_NAME,
     Key: {
       clientMessageId,  
     },
@@ -89,7 +89,7 @@ export const getClientMessage = async (clientMessageId) => {
 
 export const getAllClientsMessages = async () => {
   const params = {
-    TableName: process.env.CLIENTS_MESSAGES_TABLE,
+    TableName: process.env.CLIENTS_MESSAGES_NAME,
   };
 
   try {

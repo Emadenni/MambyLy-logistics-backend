@@ -18,7 +18,7 @@ env:
   S3_BUCKET_BASE: ${{ secrets.S3_BUCKET_BASE }}
   ADMIN_TABLE_BASE: ${{ secrets.ADMIN_TABLE_BASE }}
   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-  CLIENTS_MESSAGES_TABLE: ${{ secrets.CLIENTS_MESSAGES_TABLE }}
+  CLIENTS_MESSAGES_BASE: ${{ secrets.CLIENTS_MESSAGES_BASE }}
   
 
 jobs:
@@ -46,8 +46,8 @@ jobs:
       - name: Set JWT_SECRET_KEY
         run: echo "JWT_SECRET_KEY=${{ env.JWT_SECRET_KEY }}" >> $GITHUB_ENV
 
-      - name: Set CLIENTS_MESSAGES_TABLE
-        run: echo "CLIENTS_MESSAGES_TABLE=${{ env.CLIENTS_MESSAGES_TABLE }}" >> $GITHUB_ENV
+      - name: Set CLIENTS_MESSAGES_NAME
+        run: echo "CLIENTS_MESSAGES_NAME=${{ env.CLIENTS_MESSAGES_BASE }}-dev" >> $GITHUB_ENV
 
       - name: Deploy with Serverless
         env:
