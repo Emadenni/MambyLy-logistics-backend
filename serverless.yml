@@ -10,7 +10,7 @@ provider:
     ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
     JWT_SECRET_KEY: ${env:JWT_SECRET_KEY}
 
-  http:
+  httpApi:
     cors:
       allowedOrigins:
         - "*"
@@ -39,7 +39,7 @@ functions:
   test:
     handler: handlers/test/test.handler
     events:
-      - http:
+      - httpApi:
           path: test
           method: get
     package:
@@ -51,15 +51,15 @@ functions:
   registerAdmin:
     handler: handlers/registerAdmin/index.handler
     events:
-      - http:
-          path: admin/register
+      - httpApi:
+          path: /admin/register
           method: post
           
   loginAdmin:
     handler: handlers/loginAdmin/index.handler
     events:
       - http:
-          path: admin/login
+          path: /admin/login
           method: post
           
     package:
