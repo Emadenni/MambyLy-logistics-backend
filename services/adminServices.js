@@ -10,6 +10,20 @@ export const registerAdmin = async (adminData) => {
     throw new Error("Missing required fields");
   }
 
+  const checkEmailParams = {
+    TableName: process.env.ADMIN_TABLE_NAME,
+    IndexName: "email-index", 
+    KeyConditionExpression: "email = :email",
+    ExpressionAttributeValues: {
+      ":email": email,
+    },
+  };
+
+  const existingAdmins = await db.queryItems(checkEmailParams);
+  if(existingAdmins.lenght > 0) {
+    throw new Error ("Email Already in use");
+  }
+
   const adminId = uuidv4();
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,7 +56,7 @@ export const registerAdmin = async (adminData) => {
   try {
     await db.putItem(params);
 
-    return { adminId, firstName, lastName, email, role: "superadmin" };
+    return { adminId, firstName, lastName, email, role: "admin" };
   } catch (error) {
     throw new Error("Error registering admin: " + error.message);
   }
