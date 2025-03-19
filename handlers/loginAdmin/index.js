@@ -10,8 +10,13 @@ export const loginAdminHandler = async (event) => {
 
   try {
     const admin = await loginAdmin({ email, password });
-    console.log("Admin found:", admin);
-    return sendSuccessResponse(admin);
+    console.log("Admin found:", admin.token);
+    return sendSuccessResponse(200, {
+      admin: {
+        adminId: admin.adminId,
+      },
+      token: admin.token,
+    });
   } catch (error) {
     console.error("Error during login:", error);
     return sendError(400, error.message);
