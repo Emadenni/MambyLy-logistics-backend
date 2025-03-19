@@ -1,4 +1,4 @@
-service: MambyLy Logistics
+service: MambyLy-Logistics
 
 provider:
   name: aws
