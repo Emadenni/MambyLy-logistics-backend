@@ -2,7 +2,7 @@ service: MambyLy-logistics-backend
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   region: ${env:AWS_REGION}
   stage: ${opt:stage, 'dev'}
   environment:
@@ -26,6 +26,24 @@ functions:
       - http:
           path: test
           method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  registerAdmin:
+    handler: handlers/registerAdmin/index.registerAdminHandler
+    events:
+      - http:
+          path: admin/register
+          method: post
+          cors: true
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
 
 resources:
   Resources:
@@ -42,3 +60,10 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+
+package:
+  individually: true
+  include:
+    - services/**
+    - handlers/**
+    - node_modules/**

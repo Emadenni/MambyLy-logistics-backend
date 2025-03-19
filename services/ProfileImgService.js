@@ -16,28 +16,33 @@ const getFileExtension = (mimetype) => {
   }
 };
 
-export const uploadProfileImg = async (file, adminId) => {
-  const fileExtension = getFileExtension(file.mimetype);
+export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
+  const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
+  const buffer = Buffer.from(base64Data, 'base64');
+  const fileExtension = getFileExtension(mimetype);
   const fileName = `profile-images/${adminId}.${fileExtension}`;
 
   const params = {
     Bucket: bucketName,
     Key: fileName,
-    Body: file.buffer,
-    ContentType: file.mimetype,
+    Body: buffer,
+    ContentType: mimetype,
     ACL: "public-read",
   };
 
   try {
     const data = await S3.upload(params).promise();
+    console.log("Upload success:", data);  
     return data.Location;
   } catch (error) {
+    console.error("Error details:", error);  
     throw new Error("Error uploading profile image: " + error.message);
   }
 };
 
+
 export const deleteProfileImg = async (adminId) => {
-  const formats = ["jpg", "jpeg", "png", "gif"];
+  const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];
   let deleted = false;
 
   for (const format of formats) {
@@ -61,8 +66,9 @@ export const deleteProfileImg = async (adminId) => {
   }
 };
 
+
 export const getProfileImg = async (adminId) => {
-  const formats = ["jpg", "jpeg", "png", "gif"];
+  const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];
   let imageUrl = "";
 
   for (const format of formats) {
@@ -81,7 +87,7 @@ export const getProfileImg = async (adminId) => {
   }
 
   if (!imageUrl) {
-    imageUrl = `https://${bucketName}.s3.amazonaws.com/default-profile.jpg`;
+    imageUrl = `https://${bucketName}.s3.amazonaws.com/default-profile.jpg`;  
   }
   return imageUrl;
 };
