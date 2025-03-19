@@ -52,24 +52,22 @@ resources:
       Properties:
         TableName: ${self:provider.environment.ADMIN_TABLE_NAME}
         AttributeDefinitions:
-          - AttributeName: "adminId"
-            AttributeType: "S"
-          - AttributeName: "email"
-            AttributeType: "S"
+          - AttributeName: adminId
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
         KeySchema:
-          - AttributeName: "adminId"
-            KeyType: "HASH"
+          - AttributeName: adminId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
         GlobalSecondaryIndexes:
-          - IndexName: "email-index"
+          - IndexName: email-index
             KeySchema:
-              - AttributeName: "email"
-                KeyType: "HASH"
+              - AttributeName: email
+                KeyType: HASH
             Projection:
-              ProjectionType: "ALL"
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
-
+              ProjectionType: ALL
+        DeletionPolicy: Retain
 
 package:
   individually: true
