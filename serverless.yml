@@ -10,7 +10,7 @@ provider:
     ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
     JWT_SECRET_KEY: ${env:JWT_SECRET_KEY}
 
-  httpApi:
+  http:
     cors:
       allowedOrigins:
         - "*"
@@ -23,7 +23,7 @@ provider:
         - PUT
         - DELETE
         - OPTIONS
-
+    
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -51,17 +51,17 @@ functions:
   registerAdmin:
     handler: handlers/registerAdmin/index.handler
     events:
-      - httpApi:
+      - http:
           path: admin/register
           method: post
-
+          
   loginAdmin:
     handler: handlers/loginAdmin/index.handler
     events:
-      - httpApi:
+      - http:
           path: admin/login
           method: post
-
+          
     package:
       include:
         - services/**
@@ -90,6 +90,7 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
+        
 
 package:
   individually: true
