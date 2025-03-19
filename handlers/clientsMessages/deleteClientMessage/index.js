@@ -5,9 +5,9 @@ import { deleteClientMessage } from "../../../services/clientsMessagesService.js
 
 const deleteClientMessageHandler = async (event) => {
     try {
-      const { messageId } = event.queryStringParameters;
+      const { clientMessageId } = event.queryStringParameters;
   
-      const response = await deleteClientMessage(messageId);
+      const response = await deleteClientMessage(clientMessageId);
   
       return sendSuccessResponse(200, {
         message: "Message successfully deleted",

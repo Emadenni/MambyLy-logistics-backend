@@ -11,7 +11,7 @@ const postClientMessageHandler = async (event) => {
 
     return sendSuccessResponse(201, {
       message: "Message successfully sent",
-      messageId: response.messageId,
+      messageId: response.clientMessageId,
     });
   } catch (error) {
     return sendError(500, error.message || "Internal server error");
