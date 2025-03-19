@@ -77,7 +77,7 @@ functions:
     handler: handlers/clientsMessages/postClientMessage/index.handler
     events:
       - httpApi:
-          path: /clientsmessages
+          path: /clientsMessages
           method: post
     package:
       include:

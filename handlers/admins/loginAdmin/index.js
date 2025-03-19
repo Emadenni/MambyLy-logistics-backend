@@ -1,7 +1,7 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
 import { loginAdmin } from "../../../services/adminServices.js";
-import { validation } from "../../middlewares/validation.js";
+import { validation } from "../../../middlewares/validation.js";
 import { loginSchema } from "../../../utils/adminSchema.js";
 
 export const loginAdminHandler = async (event) => {
