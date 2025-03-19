@@ -23,6 +23,7 @@ provider:
         - PUT
         - DELETE
         - OPTIONS
+    stage: ${self:provider.stage} 
 
   iamRoleStatements:
     - Effect: Allow
