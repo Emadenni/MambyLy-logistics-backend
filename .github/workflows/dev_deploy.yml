@@ -17,6 +17,8 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   S3_BUCKET_BASE: ${{ secrets.S3_BUCKET_BASE }}
   ADMIN_TABLE_BASE: ${{ secrets.ADMIN_TABLE_BASE }}
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+  
 
 jobs:
   deploy:

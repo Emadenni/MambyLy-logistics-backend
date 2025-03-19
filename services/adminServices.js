@@ -1,7 +1,8 @@
-import * as db from "../utils/dbUtils.js"
+import * as db from "../utils/dbUtils.js";
 import { uploadProfileImg } from "./ProfileImgService.js";
-import { v4 as uuidv4 } from "uuid"; 
-import bcrypt from "bcryptjs"; 
+import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const registerAdmin = async (adminData) => {
   const { firstName, lastName, email, password, profileImage } = adminData;
@@ -12,7 +13,7 @@ export const registerAdmin = async (adminData) => {
 
   const checkEmailParams = {
     TableName: process.env.ADMIN_TABLE_NAME,
-    IndexName: "email-index", 
+    IndexName: "email-index",
     KeyConditionExpression: "email = :email",
     ExpressionAttributeValues: {
       ":email": email,
@@ -62,7 +63,7 @@ export const registerAdmin = async (adminData) => {
   }
 };
 
-//-------------------------
+//---------------------------------------------------------
 
 export const loginAdmin = async (loginData) => {
   const { email, password } = loginData;
@@ -77,6 +78,7 @@ export const loginAdmin = async (loginData) => {
   };
 
   const existingAdmins = await db.queryItems(checkEmailParams);
+
   if (!existingAdmins.Items || existingAdmins.Items.length === 0) {
     throw new Error("Admin not found");
   }
@@ -88,11 +90,14 @@ export const loginAdmin = async (loginData) => {
     throw new Error("Invalid password");
   }
 
+  const token = jwt.sign({ adminId: admin.adminId, role: admin.role }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
+
   return {
     adminId: admin.adminId,
     firstName: admin.firstName,
     lastName: admin.lastName,
     email: admin.email,
     role: admin.role,
+    token,
   };
 };

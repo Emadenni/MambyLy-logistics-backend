@@ -4,6 +4,7 @@ import { loginAdmin } from "../../services/AdminService.js";
 import { validationAdmin } from "../../middlewares/validationAdmin.js";
 import { loginSchema } from "../../utils/adminSchema.js";
 
+
 export const loginAdminHandler = async (event) => {
   const { email, password } = JSON.parse(event.body);
 

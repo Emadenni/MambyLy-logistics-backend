@@ -8,6 +8,7 @@ provider:
   environment:
     BUCKET_NAME: ${env:S3_BUCKET_BASE}-${self:provider.stage}
     ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
+    JWT_SECRET_KEY: ${env:JWT_SECRET_KEY}
   iamRoleStatements:
     - Effect: Allow
       Action:
