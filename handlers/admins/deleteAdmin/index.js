@@ -1,6 +1,7 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
 import { deleteAdmin } from "../../../services/adminServices.js";
+import { auth } from "../../../middlewares/auth.js";
 
 const deleteAdminHandler = async (event) => {
   try {
