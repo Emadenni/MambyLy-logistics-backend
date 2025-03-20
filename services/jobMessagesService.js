@@ -1,6 +1,6 @@
 import * as db from "../utils/dbUtils.js";
 import { v4 as uuidv4 } from "uuid";
-import { uploadJobCv } from "./uploadService.js";
+import { uploadJobCv } from "../services/cvService.js";
 
 export const postJobMessage = async (messageData) => {
   const { name, email, subject, textMessage, uploadCvBase64, mimetype } = messageData;
