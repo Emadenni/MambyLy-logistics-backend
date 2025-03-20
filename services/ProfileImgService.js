@@ -41,33 +41,40 @@ export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
 };
 
 export const deleteProfileImg = async (adminId) => {
-  const fileName = `profile-images/${adminId}`;
+  const fileName = `profile-images/${adminId}`; 
   const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];
   let deleted = false;
 
   for (const format of formats) {
+    
+    let key = `${fileName}.${format}`;
+    if (fileName.endsWith(`.${format}`)) {
+      key = fileName;
+    }
+
     const params = {
       Bucket: bucketName,
-      Key: `${fileName}.${format}`,
+      Key: key,  
     };
 
     try {
-      console.log(`Attempting to delete ${params.Key}`);
-      await S3.deleteObject(params).promise();
+      console.log(`Attempting to delete ${key}`);
+      await S3.deleteObject(params).promise();  
       deleted = true;
-      break;
+      break; 
     } catch (error) {
-      console.error(`Error deleting ${params.Key}:`, error.message);
-      continue;
+      console.error(`Error deleting ${key}:`, error.message);
+      continue; 
     }
   }
 
   if (deleted) {
-    return "Profile image deleted successfully";
+    return "Profile image deleted successfully"; 
   } else {
-    throw new Error("Profile image not found to delete");
+    throw new Error("Profile image not found to delete");  
   }
 };
+
 
 export const getProfileImg = async (adminId) => {
   const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];

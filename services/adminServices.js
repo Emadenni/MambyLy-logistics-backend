@@ -193,37 +193,34 @@ export const updateAdmin = async (adminId, updateData) => {
 
 // -----------------------------------------
 
-export const deleteProfileImg = async (adminId) => {
-  const fileName = `profile-images/${adminId}`;
-  const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];
-  let deleted = false;
+export const deleteAdmin = async (adminId) => {
+  try {
+    const admin = await getAdmin(adminId);
 
-  for (const format of formats) {
-    let key = `${fileName}.${format}`;
-    if (fileName.endsWith(`.${format}`)) {
-      key = fileName;
+    if (!admin) {
+      throw new Error("Admin not found");
     }
 
-    const params = {
-      Bucket: bucketName,
-      Key: key,
+    console.log("Admin profile image URL:", admin.profileImageUrl);
+
+    if (admin.profileImageUrl) {
+      const adminIdFromUrl = admin.profileImageUrl.split("/")[4];
+      await deleteProfileImg(adminIdFromUrl);
+    }
+
+    console.log("Admin profile image URL:", admin.profileImageUrl);
+
+    const deleteParams = {
+      TableName: process.env.ADMIN_TABLE_NAME,
+      Key: {
+        adminId,
+      },
     };
+    await db.deleteItem(deleteParams);
 
-    try {
-      console.log(`Attempting to delete ${key}`);
-      await S3.deleteObject(params).promise();
-      deleted = true;
-      break;
-    } catch (error) {
-      console.error(`Error deleting ${key}:`, error.message);
-      continue;
-    }
-  }
-
-  if (deleted) {
-    return "Profile image deleted successfully";
-  } else {
-    throw new Error("Profile image not found to delete");
+    return { message: "Admin deleted successfully" };
+  } catch (error) {
+    throw new Error("Error deleting admin: " + error.message);
   }
 };
 
