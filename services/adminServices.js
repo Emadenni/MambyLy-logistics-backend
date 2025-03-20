@@ -136,7 +136,7 @@ export const getAdmin = async (adminId) => {
 //----------------------------------------------------
 
 export const updateAdmin = async (adminId, updateData) => {
-  const { firstName, lastName, email, password, profileImage } = updateData;
+  const { firstName, lastName, email, password } = updateData;
 
   let updateValues = {};
 
@@ -152,9 +152,6 @@ export const updateAdmin = async (adminId, updateData) => {
   if (password) {
     updateValues.password = await bcrypt.hash(password, 10);
   }
-  if (profileImage) {
-    updateValues.profileImageUrl = profileImage;
-  }
 
   if (Object.keys(updateValues).length === 0) {
     throw new Error("No fields to update");
@@ -168,7 +165,7 @@ export const updateAdmin = async (adminId, updateData) => {
       .join(", ")}`,
     ExpressionAttributeNames: Object.fromEntries(Object.keys(updateValues).map((key) => [`#${key}`, key])),
     ExpressionAttributeValues: Object.fromEntries(
-      Object.keys(updateValues).map((key) => [`: ${key}`, updateValues[key]])
+      Object.keys(updateValues).map((key) => [`:${key}`, updateValues[key]])
     ),
     ReturnValues: "ALL_NEW",
   };
@@ -184,12 +181,13 @@ export const updateAdmin = async (adminId, updateData) => {
       firstName: result.Attributes.firstName,
       lastName: result.Attributes.lastName,
       email: result.Attributes.email,
-      profileImageUrl: result.Attributes.profileImageUrl,
+      profileImageUrl: result.Attributes.profileImageUrl, 
     };
   } catch (error) {
     throw new Error("Error updating admin: " + error.message);
   }
 };
+
 
 // -----------------------------------------
 
