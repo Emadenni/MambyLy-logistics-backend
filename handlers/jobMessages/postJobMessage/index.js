@@ -1,8 +1,8 @@
 import middy from "@middy/core";
-import { sendSuccessResponse, sendError } from "../responses/index.js";
-import { postJobMessage } from "../services/jobMessagesService.js";
-import { validation } from "../middlewares/validation.js";
-import { jobMessageSchema } from "../utils/jobMessageSchema.js";
+import { sendSuccessResponse, sendError } from "../../../responses/index.js";
+import { postJobMessage } from "../../../services/jobMessagesService.js";
+import { validation } from "../../../middlewares/validation.js";
+import { jobMessageSchema } from "../../../utils/jobMessageSchema.js";
 
 const postJobMessageHandler = async (event) => {
   try {
