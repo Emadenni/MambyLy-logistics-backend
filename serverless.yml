@@ -74,6 +74,30 @@ functions:
         - handlers/**
         - node_modules/**
 
+  getAdmin:
+    handler: handlers/admins/getAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/{adminId}
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getAllAdmins:
+    handler: handlers/admins/getAllAdmins/index.handler
+    events:
+      - httpApi:
+          path: /admin
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
   postClientMessage:
     handler: handlers/clientsMessages/postClientMessage/index.handler
     events:
