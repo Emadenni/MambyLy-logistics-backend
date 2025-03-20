@@ -20,4 +20,4 @@ const updateAdminHandler = async (event) => {
   }
 };
 
-export const handler = middy(updateAdminHandler).use(auth).use(validation(updateAdminSchema));
+export const handler = middy(updateAdminHandler).use(auth()).use(validation(updateAdminSchema)); 
