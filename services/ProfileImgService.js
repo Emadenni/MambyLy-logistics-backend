@@ -18,7 +18,7 @@ const getFileExtension = (mimetype) => {
 
 export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
   const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
-  const buffer = Buffer.from(base64Data, 'base64');
+  const buffer = Buffer.from(base64Data, "base64");
   const fileExtension = getFileExtension(mimetype);
   const fileName = `profile-images/${adminId}.${fileExtension}`;
 
@@ -32,45 +32,42 @@ export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
 
   try {
     const data = await S3.upload(params).promise();
-    console.log("Upload success:", data);  
+    console.log("Upload success:", data);
     return data.Location;
   } catch (error) {
-    console.error("Error details:", error);  
+    console.error("Error details:", error);
     throw new Error("Error uploading profile image: " + error.message);
   }
 };
 
-
 export const deleteProfileImg = async (adminId) => {
-  const fileName = `profile-images/${adminId}`; 
+  const fileName = `profile-images/${adminId}`;
   const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];
   let deleted = false;
 
   for (const format of formats) {
     const params = {
       Bucket: bucketName,
-      Key: `${fileName}.${format}`,  
+      Key: `${fileName}.${format}`,
     };
 
     try {
       console.log(`Attempting to delete ${params.Key}`);
-      await S3.deleteObject(params).promise();  
+      await S3.deleteObject(params).promise();
       deleted = true;
-      break;  
+      break;
     } catch (error) {
       console.error(`Error deleting ${params.Key}:`, error.message);
-      continue;  
+      continue;
     }
   }
 
   if (deleted) {
-    return "Profile image deleted successfully"; 
+    return "Profile image deleted successfully";
   } else {
-    throw new Error("Profile image not found to delete");  
+    throw new Error("Profile image not found to delete");
   }
 };
-
-
 
 export const getProfileImg = async (adminId) => {
   const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];
@@ -92,7 +89,7 @@ export const getProfileImg = async (adminId) => {
   }
 
   if (!imageUrl) {
-    imageUrl = `https://${bucketName}.s3.amazonaws.com/default-profile.jpg`;  
+    imageUrl = `https://${bucketName}.s3.amazonaws.com/default-profile.jpg`;
   }
   return imageUrl;
 };

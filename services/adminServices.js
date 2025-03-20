@@ -204,9 +204,8 @@ export const deleteAdmin = async (adminId) => {
     console.log("Admin profile image URL:", admin.profileImageUrl);
 
     if (admin.profileImageUrl) {
-      const imageUrlParts = admin.profileImageUrl.split("/");
-      const fileKey = imageUrlParts[imageUrlParts.length - 1];
-      await deleteProfileImg(fileKey);
+      const adminIdFromUrl = admin.profileImageUrl.split("/")[4];
+      await deleteProfileImg(adminIdFromUrl);
     }
 
     console.log("Admin profile image URL:", admin.profileImageUrl);
