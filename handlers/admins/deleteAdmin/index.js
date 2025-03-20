@@ -16,4 +16,4 @@ const deleteAdminHandler = async (event) => {
   }
 };
 
-export const handler = middy(deleteAdminHandler);
+export const handler = middy(deleteAdminHandler).use(auth());

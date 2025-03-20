@@ -193,11 +193,9 @@ export const updateAdmin = async (adminId, updateData) => {
 
 // -----------------------------------------
 
-import { getAdmin } from "./adminService";
-
 export const deleteAdmin = async (adminId) => {
   try {
-    const admin = await getAdmin(adminId); 
+    const admin = await getAdmin(adminId);
 
     if (!admin) {
       throw new Error("Admin not found");
@@ -206,7 +204,7 @@ export const deleteAdmin = async (adminId) => {
     if (admin.profileImageUrl) {
       const imageUrlParts = admin.profileImageUrl.split("/");
       const fileKey = imageUrlParts[imageUrlParts.length - 1];
-      await deleteProfileImg(fileKey);  
+      await deleteProfileImg(fileKey);
     }
 
     const deleteParams = {
@@ -222,7 +220,6 @@ export const deleteAdmin = async (adminId) => {
     throw new Error("Error deleting admin: " + error.message);
   }
 };
-
 
 // -----------------------------------------
 
