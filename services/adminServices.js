@@ -159,13 +159,15 @@ export const updateAdmin = async (adminId, updateData) => {
 
   const params = {
     TableName: process.env.ADMIN_TABLE_NAME,
-    Key: { adminId },
+    Key: {
+      adminId: adminId,  
+    },
     UpdateExpression: `set ${Object.keys(updateValues)
       .map((key, index) => `#${key} = :${key}`)
       .join(", ")}`,
     ExpressionAttributeNames: Object.fromEntries(Object.keys(updateValues).map((key) => [`#${key}`, key])),
     ExpressionAttributeValues: Object.fromEntries(
-      Object.keys(updateValues).map((key) => [`:${key}`, updateValues[key]])
+      Object.keys(updateValues).map((key) => [`:${key}`, updateValues[key]])  
     ),
     ReturnValues: "ALL_NEW",
   };
