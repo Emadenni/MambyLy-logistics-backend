@@ -116,8 +116,9 @@ functions:
       - httpApi:
           path: /clientsMessages
           method: get
+
   postJobMessage:
-    handler: handlers/jobMessages/postjobMessage/index.handler
+    handler: handlers/jobMessages/postJobMessage/index.handler
     events:
       - httpApi:
           path: /jobMessages
@@ -128,8 +129,8 @@ functions:
         - handlers/**
         - node_modules/**
 
-  deletejobMessage:
-    handler: handlers/jobMessages/deletejobMessage/index.handler
+  deleteJobMessage:
+    handler: handlers/jobMessages/deleteJobMessage/index.handler
     events:
       - httpApi:
           path: /jobMessages/{jobMessageId}
@@ -140,8 +141,8 @@ functions:
         - handlers/**
         - node_modules/**
 
-  getjobMessage:
-    handler: handlers/jobMessages/getjobMessage/index.handler
+  getJobMessage:
+    handler: handlers/jobMessages/getJobMessage/index.handler
     events:
       - httpApi:
           path: /jobMessages/{jobMessageId}
@@ -153,7 +154,7 @@ functions:
         - node_modules/**
 
   getAlljobMessages:
-    handler: handlers/jobMessages/getAlljobMessages/index.handler
+    handler: handlers/jobMessages/getAllJobMessages/index.handler
     events:
       - httpApi:
           path: /jobMessages
