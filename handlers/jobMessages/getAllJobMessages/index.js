@@ -1,10 +1,10 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
-import { getAllClientsMessages } from "../../../services/clientsMessagesService.js";
+import { getAllJobMessages } from "../../../services/jobMessagesService.js";
 
-const getAllClientsMessagesHandler = async () => {
+const getAllJobMessagesHandler = async () => {
   try {
-    const messages = await getAllClientsMessages();
+    const messages = await getAllJobMessages();
 
     if (!messages || messages.length === 0) {
       return sendSuccessResponse(200, { message: "No messages found" });
@@ -16,4 +16,4 @@ const getAllClientsMessagesHandler = async () => {
   }
 };
 
-export const handler = middy(getAllClientsMessagesHandler);
+export const handler = middy(getAllJobMessagesHandler);
