@@ -7,7 +7,7 @@ import { auth } from "../../../middlewares/auth.js";
 
 const updateAdminHandler = async (event) => {
   try {
-    const { adminId, ...updateData } = JSON.parse(event.body);
+    const { adminId, ...updateData } = event.body;
 
     const updatedAdmin = await updateAdmin(adminId, updateData);
 
@@ -16,8 +16,9 @@ const updateAdminHandler = async (event) => {
       updatedAdmin,
     });
   } catch (error) {
+    // Gestione degli errori
     return sendError(500, error.message || "Internal server error");
   }
 };
 
-export const handler = middy(updateAdminHandler).use(auth()).use(validation(updateAdminSchema)); 
+export const handler = middy(updateAdminHandler).use(auth()).use(validation(updateAdminSchema));
