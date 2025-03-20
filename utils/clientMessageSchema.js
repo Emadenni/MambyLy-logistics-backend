@@ -6,3 +6,4 @@ export const clientMessageSchema = Joi.object({
   subject: Joi.string().min(3).max(255).required(),
   textMessage: Joi.string().min(10).max(2000).required(),
 });
+

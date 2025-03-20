@@ -110,6 +110,18 @@ functions:
         - handlers/**
         - node_modules/**
 
+  updateAdmin:
+    handler: handlers/admins/updateAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/{adminId}
+          method: put
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
   postClientMessage:
     handler: handlers/clientsMessages/postClientMessage/index.handler
     events:
