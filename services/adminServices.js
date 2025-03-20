@@ -201,11 +201,15 @@ export const deleteAdmin = async (adminId) => {
       throw new Error("Admin not found");
     }
 
+    console.log("Admin profile image URL:", admin.profileImageUrl);
+
     if (admin.profileImageUrl) {
       const imageUrlParts = admin.profileImageUrl.split("/");
       const fileKey = imageUrlParts[imageUrlParts.length - 1];
       await deleteProfileImg(fileKey);
     }
+
+    console.log("Admin profile image URL:", admin.profileImageUrl);
 
     const deleteParams = {
       TableName: process.env.ADMIN_TABLE_NAME,
