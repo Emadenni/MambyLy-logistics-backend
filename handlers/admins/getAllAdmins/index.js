@@ -16,4 +16,4 @@ const getAllAdminsHandler = async () => {
   }
 };
 
-export const handler = middy(getAllAdminsHandler);
+export const handler = middy(getAllAdminsHandler).use(auth());
