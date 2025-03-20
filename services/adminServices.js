@@ -194,26 +194,21 @@ export const updateAdmin = async (adminId, updateData) => {
 // -----------------------------------------
 
 export const deleteAdmin = async (adminId) => {
-  const params = {
-    TableName: process.env.ADMIN_TABLE_NAME,
-    Key: {
-      adminId,
-    },
-  };
-
   try {
-    const result = await db.getItem(params);
-    const admin = result.Item;
+    const admin = await getAdmin(adminId);
 
     if (!admin) {
       throw new Error("Admin not found");
     }
 
+    console.log("Admin profile image URL:", admin.profileImageUrl);
+
     if (admin.profileImageUrl) {
-      const imageUrlParts = admin.profileImageUrl.split("/");
-      const fileKey = imageUrlParts[imageUrlParts.length - 1];
-      await deleteProfileImg(fileKey);
+      const adminIdFromUrl = admin.profileImageUrl.split("/")[4];
+      await deleteProfileImg(adminIdFromUrl);
     }
+
+    console.log("Admin profile image URL:", admin.profileImageUrl);
 
     const deleteParams = {
       TableName: process.env.ADMIN_TABLE_NAME,

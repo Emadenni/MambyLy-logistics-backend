@@ -98,6 +98,18 @@ functions:
         - handlers/**
         - node_modules/**
 
+  deleteAdmin:
+    handler: handlers/admins/deleteAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/{adminId}
+          method: delete
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
   postClientMessage:
     handler: handlers/clientsMessages/postClientMessage/index.handler
     events:
