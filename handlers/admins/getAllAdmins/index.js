@@ -1,6 +1,6 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
-import { getAllAdmins } from "../../../services/adminService.js";
+import { getAllAdmins } from "../../../services/adminServices.js";
 
 const getAllAdminsHandler = async () => {
   try {
