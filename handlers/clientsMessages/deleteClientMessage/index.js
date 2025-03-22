@@ -6,7 +6,7 @@ import { auth } from "../../../middlewares/auth.js";
 
 const deleteClientMessageHandler = async (event) => {
     try {
-      const { clientMessageId } = event.queryStringParameters;
+      const { clientMessageId } = event.pathParameters; 
   
       const response = await deleteClientMessage(clientMessageId);
   

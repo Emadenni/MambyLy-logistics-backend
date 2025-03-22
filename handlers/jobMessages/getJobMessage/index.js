@@ -5,7 +5,7 @@ import { auth } from "../../../middlewares/auth.js";
 
 const getJobMessageHandler = async (event) => {
   try {
-    const { jobMessageId } = event.queryStringParameters;
+    const { jobMessageId } = event.pathParameters; 
 
     if (!jobMessageId) {
       return sendError(400, "jobMessageId is required");

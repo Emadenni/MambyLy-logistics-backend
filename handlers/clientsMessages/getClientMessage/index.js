@@ -6,7 +6,7 @@ import { auth } from "../../../middlewares/auth.js";
 
 const getClientMessageHandler = async (event) => {
     try {
-      const { clientMessageId } = event.queryStringParameters;
+      const { clientMessageId } = event.pathParameters; 
   
       const message = await getClientMessage(clientMessageId);
   
