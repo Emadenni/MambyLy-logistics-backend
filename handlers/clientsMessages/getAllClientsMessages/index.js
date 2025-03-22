@@ -1,6 +1,7 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
 import { getAllClientsMessages } from "../../../services/clientsMessagesService.js";
+import { auth } from "../../../middlewares/auth.js";
 
 const getAllClientsMessagesHandler = async () => {
   try {
@@ -16,4 +17,4 @@ const getAllClientsMessagesHandler = async () => {
   }
 };
 
-export const handler = middy(getAllClientsMessagesHandler);
+export const handler = middy(getAllClientsMessagesHandler).use(auth());

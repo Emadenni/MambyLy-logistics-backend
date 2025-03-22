@@ -18,5 +18,4 @@ const postClientMessageHandler = async (event) => {
   }
 };
 
-export const handler = middy(postClientMessageHandler)
-  .use(validation(clientMessageSchema)); 
+export const handler = middy(postClientMessageHandler).use(validation(clientMessageSchema));

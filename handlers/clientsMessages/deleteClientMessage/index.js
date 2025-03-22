@@ -1,6 +1,7 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
 import { deleteClientMessage } from "../../../services/clientsMessagesService.js";
+import { auth } from "../../../middlewares/auth.js";
 
 
 const deleteClientMessageHandler = async (event) => {
@@ -17,4 +18,4 @@ const deleteClientMessageHandler = async (event) => {
     }
   };
   
-  export const handler = middy(deleteClientMessageHandler);
+  export const handler = middy(deleteClientMessageHandler).use(auth());

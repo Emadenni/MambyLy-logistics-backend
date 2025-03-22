@@ -1,6 +1,7 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
 import { getJobMessage } from "../../../services/jobMessagesService.js";
+import { auth } from "../../../middlewares/auth.js";
 
 const getJobMessageHandler = async (event) => {
   try {
@@ -22,4 +23,4 @@ const getJobMessageHandler = async (event) => {
   }
 };
 
-export const handler = middy(getJobMessageHandler);
+export const handler = middy(getJobMessageHandler).use(auth());
