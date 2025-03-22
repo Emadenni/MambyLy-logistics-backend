@@ -5,8 +5,7 @@ import { auth } from "../../../middlewares/auth.js";
 
 const deleteAdminHandler = async (event) => {
   try {
-    const { adminId } = event.queryStringParameters;
-
+    const { adminId } = event.pathParameters;
     const response = await deleteAdmin(adminId);
 
     return sendSuccessResponse(200, {
