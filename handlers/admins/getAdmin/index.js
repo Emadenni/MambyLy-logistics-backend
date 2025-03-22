@@ -5,7 +5,7 @@ import { auth } from "../../../middlewares/auth.js";
 
 const getAdminHandler = async (event) => {
   try {
-    const { adminId } = event.queryStringParameters;
+    const { adminId } = event.pathParameters; 
 
     if (!adminId) {
       throw new Error("Admin ID is required");
