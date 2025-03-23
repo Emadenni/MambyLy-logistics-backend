@@ -1,3 +1,4 @@
+import middy from "@middy/core";
 import { uploadProfileImg, deleteProfileImg } from "../../../services/ProfileImgService.js";
 import { auth } from "../../../middlewares/auth.js";
 
