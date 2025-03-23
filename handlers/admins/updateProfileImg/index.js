@@ -1,5 +1,5 @@
 import { uploadProfileImg, deleteProfileImg } from "../../../services/ProfileImgService.js";
-import { auth } from "../../../middlewares/auth";
+import { auth } from "../../../middlewares/auth.js";
 
 export const updateProfileImgHandler = async (event) => {
   const adminId = event.pathParameters.adminId;
