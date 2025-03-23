@@ -1,4 +1,4 @@
-import { uploadProfileImg, deleteProfileImg } from "../../../services/ProfileImgService";
+import { uploadProfileImg, deleteProfileImg } from "../../../services/ProfileImgService.js";
 import { auth } from "../../../middlewares/auth";
 
 export const updateProfileImgHandler = async (event) => {
