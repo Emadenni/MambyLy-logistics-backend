@@ -126,7 +126,7 @@ functions:
     handler: handlers/admins/updateProfileImg/index.handler
     events:
       - httpApi:
-          path: admin/{adminId}/update-profile-img
+          path: admin/{adminId}/updateProfileImage
           method: put
     package:
       include:
