@@ -62,6 +62,18 @@ functions:
         - handlers/**
         - node_modules/**
 
+  registerSuperAdmin:
+    handler: handlers/admins/registerSuperAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/register-superadmin
+          method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
   loginAdmin:
     handler: handlers/admins/loginAdmin/index.handler
     events:
@@ -104,6 +116,18 @@ functions:
       - httpApi:
           path: /admin/{adminId}
           method: delete
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  updateProfileImg:
+    handler: handlers/admins/updateProfileImg/index.handler
+    events:
+      - httpApi:
+          path: admin/{adminId}/update-profile-img
+          method: put
     package:
       include:
         - services/**
