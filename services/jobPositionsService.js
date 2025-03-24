@@ -27,7 +27,7 @@ export const postJobPosition = async (positionData) => {
 
   try {
     console.log("Saving item:", JSON.stringify(params, null, 2));
-    await db.put(params).promise();
+    await db.putItem(params);
     return {
       success: true,
       message: "Position successfully added",
