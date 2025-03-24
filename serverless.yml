@@ -250,6 +250,42 @@ functions:
         - handlers/**
         - node_modules/**
 
+  getJobPosition:
+    handler: handlers/jobPositions/getJobPosition/index.handler
+    events:
+      - httpApi:
+          path: /jobPositions/{positionId}
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  deleteJobPosition:
+    handler: handlers/jobPositions/deleteJobPosition/index.handler
+    events:
+      - httpApi:
+          path: /jobPositions/{positionId}
+          method: delete
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getAllJobPositions:
+    handler: handlers/jobPositions/getAllJobPositions/index.handler
+    events:
+      - httpApi:
+          path: /jobPositions
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
 resources:
   Resources:
     AdminTable:
