@@ -1,16 +1,18 @@
 import * as db from "../utils/dbUtils.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const postJobPosition = async (positionData) => {
-  const { positionId, departure, destination, distance, type } = positionData;
+  const { departure, destination, distance, type } = positionData;
 
-  if (!positionId || !departure || !destination || !distance || !type) {
+  if (!departure || !destination || !distance || !type) {
     throw new Error("Missing required fields");
   }
 
+  const positionId = uuidv4(); 
   const createdAt = new Date().toISOString();
 
   const message = {
-    positionId,
+    positionId, 
     departure,
     destination,
     distance,
