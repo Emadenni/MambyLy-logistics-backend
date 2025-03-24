@@ -107,3 +107,50 @@ export const deleteJobPosition = async (positionId, createdAt) => {
     throw new Error("Error deleting position: " + error.message);
   }
 };
+
+//-------------------------------------------
+
+export const updateJobPosition = async (positionId, createdAt, updatedData) => {
+  if (!positionId || !createdAt || !updatedData) {
+    throw new Error("Position ID, createdAt, and updated data are required");
+  }
+
+  const modifiedAt = new Date().toISOString();
+
+  const params = {
+    TableName: process.env.JOB_POSITIONS_NAME,
+    Key: {
+      positionId,
+      createdAt,
+    },
+    UpdateExpression:
+      "set #departure = :departure, #destination = :destination, #distance = :distance, #type = :type, #modifiedAt = :modifiedAt",
+    ExpressionAttributeNames: {
+      "#departure": "departure",
+      "#destination": "destination",
+      "#distance": "distance",
+      "#type": "type",
+      "#modifiedAt": "modifiedAt",
+    },
+    ExpressionAttributeValues: {
+      ":departure": updatedData.departure,
+      ":destination": updatedData.destination,
+      ":distance": updatedData.distance,
+      ":type": updatedData.type,
+      ":modifiedAt": modifiedAt,
+    },
+    ReturnValues: "ALL_NEW",
+  };
+
+  try {
+    const result = await db.update(params);
+    return {
+      success: true,
+      message: `Position with ID ${positionId} updated successfully`,
+      updatedItem: result.Attributes,
+    };
+  } catch (error) {
+    console.error("Error updating position:", error);
+    throw new Error("Error updating position: " + error.message);
+  }
+};
