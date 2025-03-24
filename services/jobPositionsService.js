@@ -97,6 +97,9 @@ export const updateJobPosition = async (positionId) => {
   }
 
   try {
+    // Log per verificare il positionId
+    console.log("Recuperando posizione con ID:", positionId);
+    
     const position = await getJobPosition(positionId);
 
     if (!position) {
@@ -124,10 +127,14 @@ export const updateJobPosition = async (positionId) => {
       ReturnValues: "ALL_NEW", 
     };
 
+    console.log("Eseguito update con i seguenti parametri:", params);
+    
     const result = await db.updateItem(params);
 
     return result.Attributes; 
   } catch (error) {
+    // Log dell'errore
+    console.error("Errore nell'aggiornamento della posizione:", error.message);
     throw new Error("Error updating position: " + error.message);
   }
 };
