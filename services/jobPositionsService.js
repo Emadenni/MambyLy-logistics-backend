@@ -65,3 +65,25 @@ export const getJobPosition = async (positionId) => {
   }
 
 }
+
+//---------------------------------
+
+export const getAllJobPositions = async () => {
+  const params = {
+    TableName: process.env.JOB_POSITIONS_NAME, 
+    Limit: 100, 
+  };
+
+  try {
+    
+    const result = await db.scanItems(params);
+
+    if (!result.Items || result.Items.length === 0) {
+      throw new Error("No positions found");
+    }
+
+    return result.Items; 
+  } catch (error) {
+    throw new Error("Error retrieving positions: " + error.message);
+  }
+};
