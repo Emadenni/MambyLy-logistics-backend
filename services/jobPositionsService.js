@@ -88,65 +88,22 @@ export const getAllJobPositions = async () => {
 
 export const deleteJobPosition = async (positionId, createdAt) => {
   if (!positionId || !createdAt) {
-    throw new Error("Position ID and Created At are required");
+    throw new Error("Position ID and createdAt are required");
   }
 
   const params = {
     TableName: process.env.JOB_POSITIONS_NAME,
     Key: {
-      positionId,  
-      createdAt, 
+      positionId,
+      createdAt,
     },
   };
 
   try {
-    await db.deleteItem(params);
-
-    return {
-      success: true,
-      message: "Position successfully deleted",
-      positionId,
-    };
+    await db.deleteItem(params).promise();
+    return { success: true, message: `Position with ID ${positionId} deleted successfully` };
   } catch (error) {
+    console.error("Error deleting position:", error);
     throw new Error("Error deleting position: " + error.message);
-  }
-};
-
-//-------------------------------------
-
-export const updateJobPosition = async (positionId, createdAt) => {
-  if (!positionId || !createdAt) {
-    throw new Error("Position ID and Created At are required");
-  }
-
-  try {
-    const updatedPosition = {
-      positionId,
-      createdAt,
-      modifiedAt: new Date().toISOString(),
-    };
-
-    const params = {
-      TableName: process.env.JOB_POSITIONS_NAME,
-      Key: {
-        positionId: updatedPosition.positionId, 
-        createdAt: updatedPosition.createdAt,    
-      },
-      UpdateExpression: "SET #modifiedAt = :modifiedAt",
-      ExpressionAttributeNames: {
-        "#modifiedAt": "modifiedAt",
-      },
-      ExpressionAttributeValues: {
-        ":modifiedAt": updatedPosition.modifiedAt,
-      },
-      ReturnValues: "ALL_NEW",
-    };
-
-    // Esegui l'update
-    const result = await db.updateItem(params);
-
-    return result.Attributes;
-  } catch (error) {
-    throw new Error("Error updating position: " + error.message);
   }
 };
