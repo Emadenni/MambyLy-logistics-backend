@@ -63,3 +63,5 @@ export const getJobPosition = async (positionId) => {
   } catch (error) {
     throw new Error("Error retrieving position: " + error.message);
   }
+
+}
