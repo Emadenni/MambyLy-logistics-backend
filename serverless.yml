@@ -311,7 +311,7 @@ resources:
           - AttributeName: positionId
             AttributeType: S
           - AttributeName: createdAt
-            AttributeType: N
+            AttributeType: S
         KeySchema:
           - AttributeName: positionId
             KeyType: HASH
