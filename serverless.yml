@@ -8,8 +8,9 @@ provider:
   environment:
     BUCKET_NAME: ${env:S3_BUCKET_BASE}-${self:provider.stage}
     ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
-    CLIENTS_MESSAGES_NAME: ${env:CLIENTS_MESSAGES_BASE}-${self:provider.stage} 
-    JOB_MESSAGES_NAME: ${env:JOB_MESSAGES_BASE}-${self:provider.stage} 
+    CLIENTS_MESSAGES_NAME: ${env:CLIENTS_MESSAGES_BASE}-${self:provider.stage}
+    JOB_MESSAGES_NAME: ${env:JOB_MESSAGES_BASE}-${self:provider.stage}
+    JOB_POSITIONS_NAME: ${env:JOB_POSITIONS_BASE}-${self:provider.stage}
     JWT_SECRET_KEY: ${env:JWT_SECRET_KEY}
 
   httpApi:
@@ -237,6 +238,18 @@ functions:
         - handlers/**
         - node_modules/**
 
+  postJobPosition:
+    handler: handlers/jobPositions/postJobPosition/index.handler
+    events:
+      - httpApi:
+          path: /jobPositions
+          method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
 resources:
   Resources:
     AdminTable:
@@ -260,7 +273,7 @@ resources:
             Projection:
               ProjectionType: ALL
 
-    ClientsMessagesTable: 
+    ClientsMessagesTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:provider.environment.CLIENTS_MESSAGES_NAME}
@@ -274,7 +287,8 @@ resources:
         TimeToLiveSpecification:
           AttributeName: sentAt
           Enabled: true
-    JobMessagesTable: 
+
+    JobMessagesTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:provider.environment.JOB_MESSAGES_NAME}
@@ -287,4 +301,23 @@ resources:
         BillingMode: PAY_PER_REQUEST
         TimeToLiveSpecification:
           AttributeName: sentAt
+          Enabled: true
+
+    JobPositionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.JOB_POSITIONS_NAME}
+        AttributeDefinitions:
+          - AttributeName: positionId
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: N
+        KeySchema:
+          - AttributeName: positionId
+            KeyType: HASH
+          - AttributeName: createdAt
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: createdAt
           Enabled: true
