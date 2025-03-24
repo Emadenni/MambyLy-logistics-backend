@@ -27,7 +27,7 @@ const updateProfileImageInDB = async (adminId, imageUrl) => {
   };
 
   try {
-    const result = await dynamoDB.update(params).promise();
+    const result = await db.updateItem(params);
     return result.Attributes;
   } catch (error) {
     throw new Error("Error updating profile image URL in database");
@@ -52,8 +52,12 @@ export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
     const data = await S3.upload(params).promise();
     const imageUrl = data.Location;
 
-    const adminData = await db.getAdminData(adminId);
-    if (adminData && adminData.profileImageUrl === imageUrl) {
+    const adminData = await db.getItem({
+      TableName: process.env.ADMIN_TABLE_NAME,
+      Key: { adminId: adminId },
+    });
+
+    if (adminData.Item && adminData.Item.profileImageUrl === imageUrl) {
       return imageUrl;
     }
 
