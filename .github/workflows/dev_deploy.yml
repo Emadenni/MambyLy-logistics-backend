@@ -20,6 +20,7 @@ env:
   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
   CLIENTS_MESSAGES_BASE: ${{ secrets.CLIENTS_MESSAGES_BASE }}
   JOB_MESSAGES_BASE: ${{ secrets.JOB_MESSAGES_BASE }}
+  JOB_POSITIONS_BASE: ${{ secrets.JOB_POSITIONS_BASE }}
   
 
 jobs:
@@ -52,6 +53,9 @@ jobs:
 
       - name: Set JOB_MESSAGES_NAME
         run: echo "JOB_MESSAGES_NAME=${{ env.JOB_MESSAGES_BASE }}-dev" >> $GITHUB_ENV
+
+      - name: Set JOB_POSITIONS_NAME
+        run: echo "JOB_POSITIONS_NAME=${{ env.JOB_POSITIONS_BASE }}-dev" >> $GITHUB_ENV
 
       - name: Deploy with Serverless
         env:
