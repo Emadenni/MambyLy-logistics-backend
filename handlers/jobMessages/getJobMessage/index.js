@@ -1,10 +1,11 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
 import { getJobMessage } from "../../../services/jobMessagesService.js";
+import { auth } from "../../../middlewares/auth.js";
 
 const getJobMessageHandler = async (event) => {
   try {
-    const { jobMessageId } = event.queryStringParameters;
+    const { jobMessageId } = event.pathParameters; 
 
     if (!jobMessageId) {
       return sendError(400, "jobMessageId is required");
@@ -22,4 +23,4 @@ const getJobMessageHandler = async (event) => {
   }
 };
 
-export const handler = middy(getJobMessageHandler);
+export const handler = middy(getJobMessageHandler).use(auth());

@@ -1,4 +1,5 @@
 import AWS from "aws-sdk";
+import * as db from "../utils/dbUtils.js";
 
 const S3 = new AWS.S3();
 const bucketName = process.env.BUCKET_NAME;
@@ -13,6 +14,23 @@ const getFileExtension = (mimetype) => {
       return "gif";
     default:
       return "jpg";
+  }
+};
+
+const updateProfileImageInDB = async (adminId, imageUrl) => {
+  const params = {
+    TableName: process.env.ADMIN_TABLE_NAME,
+    Key: { adminId: adminId },
+    UpdateExpression: "set profileImageUrl = :imageUrl",
+    ExpressionAttributeValues: { ":imageUrl": imageUrl },
+    ReturnValues: "ALL_NEW",
+  };
+
+  try {
+    const result = await db.updateItem(params);
+    return result.Attributes;
+  } catch (error) {
+    throw new Error("Error updating profile image URL in database");
   }
 };
 
@@ -32,21 +50,30 @@ export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
 
   try {
     const data = await S3.upload(params).promise();
-    console.log("Upload success:", data);
-    return data.Location;
+    const imageUrl = data.Location;
+
+    const adminData = await db.getItem({
+      TableName: process.env.ADMIN_TABLE_NAME,
+      Key: { adminId: adminId },
+    });
+
+    if (adminData.Item && adminData.Item.profileImageUrl === imageUrl) {
+      return imageUrl;
+    }
+
+    await updateProfileImageInDB(adminId, imageUrl);
+    return imageUrl;
   } catch (error) {
-    console.error("Error details:", error);
     throw new Error("Error uploading profile image: " + error.message);
   }
 };
 
 export const deleteProfileImg = async (adminId) => {
-  const fileName = `profile-images/${adminId}`; 
+  const fileName = `profile-images/${adminId}`;
   const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];
   let deleted = false;
 
   for (const format of formats) {
-    
     let key = `${fileName}.${format}`;
     if (fileName.endsWith(`.${format}`)) {
       key = fileName;
@@ -54,27 +81,24 @@ export const deleteProfileImg = async (adminId) => {
 
     const params = {
       Bucket: bucketName,
-      Key: key,  
+      Key: key,
     };
 
     try {
-      console.log(`Attempting to delete ${key}`);
-      await S3.deleteObject(params).promise();  
+      await S3.deleteObject(params).promise();
       deleted = true;
-      break; 
+      break;
     } catch (error) {
-      console.error(`Error deleting ${key}:`, error.message);
-      continue; 
+      continue;
     }
   }
 
   if (deleted) {
-    return "Profile image deleted successfully"; 
+    return "Profile image deleted successfully";
   } else {
-    throw new Error("Profile image not found to delete");  
+    throw new Error("Profile image not found to delete");
   }
 };
-
 
 export const getProfileImg = async (adminId) => {
   const formats = ["jpg", "jpeg", "png", "gif", "webp", "bmp"];

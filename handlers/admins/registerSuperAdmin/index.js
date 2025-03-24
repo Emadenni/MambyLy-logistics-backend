@@ -1,18 +1,18 @@
 import middy from "@middy/core";
-import { registerAdmin } from "../../../services/adminServices.js";
+import { registerSuperAdmin } from "../../../services/adminServices.js";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
 import { validation } from "../../../middlewares/validation.js";
 import { adminSchema } from "../../../utils/adminSchema.js";
 import { auth } from "../../../middlewares/auth.js";
 
-const registerAdminHandler = async (event) => {
+const registerSuperAdminHandler = async (event) => {
   try {
     const adminData = event.body;
-    const admin = await registerAdmin(adminData);
+    const superAdmin = await registerSuperAdmin(adminData); 
 
     return sendSuccessResponse(201, {
-      message: "Admin registered successfully",
-      admin,
+      message: "Superadmin registered successfully",
+      admin: superAdmin,
     });
   } catch (error) {
     if (error.message === "Email Already in use") {
@@ -23,4 +23,4 @@ const registerAdminHandler = async (event) => {
   }
 };
 
-export const handler = middy(registerAdminHandler).use(auth()).use(validation(adminSchema));
+export const handler = middy(registerSuperAdminHandler).use(auth()).use(validation(adminSchema)); 

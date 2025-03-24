@@ -1,11 +1,12 @@
 import middy from "@middy/core";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
 import { getClientMessage } from "../../../services/clientsMessagesService.js";
+import { auth } from "../../../middlewares/auth.js";
 
 
 const getClientMessageHandler = async (event) => {
     try {
-      const { clientMessageId } = event.queryStringParameters;
+      const { clientMessageId } = event.pathParameters; 
   
       const message = await getClientMessage(clientMessageId);
   
@@ -15,4 +16,4 @@ const getClientMessageHandler = async (event) => {
     }
   };
   
-  export const handler = middy(getClientMessageHandler);
+  export const handler = middy(getClientMessageHandler).use(auth());

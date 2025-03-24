@@ -4,6 +4,67 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+
+export const registerSuperAdmin = async (adminData) => {
+  const { firstName, lastName, email, password, profileImage } = adminData;
+
+  if (!firstName || !lastName || !email || !password) {
+    throw new Error("Missing required fields");
+  }
+
+  const checkEmailParams = {
+    TableName: process.env.ADMIN_TABLE_NAME,
+    IndexName: "email-index",
+    KeyConditionExpression: "email = :email",
+    ExpressionAttributeValues: {
+      ":email": email,
+    },
+  };
+
+  const existingAdmins = await db.queryItems(checkEmailParams);
+  if (existingAdmins.Items && existingAdmins.Items.length > 0) {
+    throw new Error("Email Already in use");
+  }
+
+  const adminId = uuidv4();
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  let imageUrl = "";
+  if (profileImage) {
+    try {
+      imageUrl = await uploadProfileImg(profileImage, adminId);
+    } catch (error) {
+      throw new Error("Error uploading profile image");
+    }
+  }
+
+  const superAdmin = {
+    adminId,
+    firstName,
+    lastName,
+    email,
+    password: hashedPassword,
+    profileImageUrl: imageUrl,
+    role: "superadmin", 
+    createdAt: new Date().toISOString(),
+  };
+
+  const params = {
+    TableName: process.env.ADMIN_TABLE_NAME,
+    Item: superAdmin,
+  };
+
+  try {
+    await db.putItem(params);
+
+    return { adminId, firstName, lastName, email, role: "superadmin" }; 
+  } catch (error) {
+    throw new Error("Error registering superadmin: " + error.message);
+  }
+};
+
+//-------------------------------------------------------
+
 export const registerAdmin = async (adminData) => {
   const { firstName, lastName, email, password, profileImage } = adminData;
 
@@ -201,7 +262,9 @@ export const deleteAdmin = async (adminId) => {
       throw new Error("Admin not found");
     }
 
-    console.log("Admin profile image URL:", admin.profileImageUrl);
+    if (admin.role === "superadmin") {
+      throw new Error("Cannot delete a superadmin");
+    }
 
     if (admin.profileImageUrl) {
       const adminIdFromUrl = admin.profileImageUrl.split("/")[4];
