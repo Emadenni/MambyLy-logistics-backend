@@ -39,7 +39,7 @@ export const postJobPosition = async (positionData) => {
 //--------------------------------
 
 export const getJobPosition = async (positionId) => {
-  if (!positionIdId) { 
+  if (!positionId) { 
     throw new Error("Position ID is required");
   }
 
