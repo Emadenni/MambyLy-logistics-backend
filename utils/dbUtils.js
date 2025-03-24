@@ -33,8 +33,8 @@ export const deleteItem = async (params) => {
 };
 
 export const queryItems = async (params) => {
-  const command = new QueryCommand(params);  // crea il comando per fare una query
-  return db.send(command);  // invia il comando al db
+  const command = new QueryCommand(params);  
+  return db.send(command);  
 };
 
 
