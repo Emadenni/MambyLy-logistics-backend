@@ -6,8 +6,9 @@ import { auth } from "../../../middlewares/auth.js";
 const deleteJobPositionHandler = async (event) => {
   try {
     const { positionId } = event.pathParameters;
+    const { createdAt } = JSON.parse(event.body);
 
-    const response = await deleteJobPosition(positionId);
+    const response = await deleteJobPosition(positionId, createdAt);
 
     return sendSuccessResponse(200, response);
   } catch (error) {

@@ -86,31 +86,51 @@ export const getAllJobPositions = async () => {
 
 //------------------------------------------
 
-export const updateJobPosition = async (positionId) => {
-  if (!positionId) {
-    throw new Error("Position ID is required");
+export const deleteJobPosition = async (positionId, createdAt) => {
+  if (!positionId || !createdAt) {
+    throw new Error("Position ID and Created At are required");
+  }
+
+  const params = {
+    TableName: process.env.JOB_POSITIONS_NAME,
+    Key: {
+      positionId,  
+      createdAt, 
+    },
+  };
+
+  try {
+    await db.deleteItem(params);
+
+    return {
+      success: true,
+      message: "Position successfully deleted",
+      positionId,
+    };
+  } catch (error) {
+    throw new Error("Error deleting position: " + error.message);
+  }
+};
+
+//-------------------------------------
+
+export const updateJobPosition = async (positionId, createdAt) => {
+  if (!positionId || !createdAt) {
+    throw new Error("Position ID and Created At are required");
   }
 
   try {
-    // Log per verificare il positionId
-    console.log("Recuperando posizione con ID:", positionId);
-
-    const position = await getJobPosition(positionId);
-
-    if (!position) {
-      throw new Error("Position not found");
-    }
-
     const updatedPosition = {
-      ...position,
+      positionId,
+      createdAt,
       modifiedAt: new Date().toISOString(),
     };
 
     const params = {
       TableName: process.env.JOB_POSITIONS_NAME,
       Key: {
-        positionId: updatedPosition.positionId,
-        createdAt: updatedPosition.createdAt,
+        positionId: updatedPosition.positionId, 
+        createdAt: updatedPosition.createdAt,    
       },
       UpdateExpression: "SET #modifiedAt = :modifiedAt",
       ExpressionAttributeNames: {
@@ -122,48 +142,11 @@ export const updateJobPosition = async (positionId) => {
       ReturnValues: "ALL_NEW",
     };
 
-    console.log("Eseguito update con i seguenti parametri:", params);
-
+    // Esegui l'update
     const result = await db.updateItem(params);
 
     return result.Attributes;
   } catch (error) {
-    // Log dell'errore
-    console.error("Errore nell'aggiornamento della posizione:", error.message);
     throw new Error("Error updating position: " + error.message);
-  }
-};
-
-//-------------------------------------------
-
-export const deleteJobPosition = async (positionId) => {
-  if (!positionId) {
-    throw new Error("Position ID is required");
-  }
-
-  try {
-    const position = await getJobPosition(positionId);
-
-    if (!position) {
-      throw new Error("Position not found");
-    }
-
-    const params = {
-      TableName: process.env.JOB_POSITIONS_NAME,
-      Key: {
-        positionId: position.positionId,
-        createdAt: position.createdAt,
-      },
-    };
-
-    await db.deleteItem(params);
-
-    return {
-      success: true,
-      message: "Position successfully deleted",
-      positionId,
-    };
-  } catch (error) {
-    throw new Error("Error deleting position: " + error.message);
   }
 };
