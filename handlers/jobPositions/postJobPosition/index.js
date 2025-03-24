@@ -11,7 +11,7 @@ const postJobPositionHandler = async (event) => {
     const response = await postJobPosition(positionData);
 
     return sendSuccessResponse(201, {
-      message: "Psition successfully added",
+      message: "Position successfully added",
       messageId: response.positionId,
     });
   } catch (error) {
@@ -19,4 +19,4 @@ const postJobPositionHandler = async (event) => {
   }
 };
 
-export const handler = middy(postJobPositionHandler).use(validation(positionSchema)).use(auth());
+export const handler = middy(postJobPositionHandler).use(auth()).use(validation(positionSchema));

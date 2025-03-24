@@ -8,11 +8,11 @@ export const postJobPosition = async (positionData) => {
     throw new Error("Missing required fields");
   }
 
-  const positionId = uuidv4(); 
+  const positionId = uuidv4();
   const createdAt = new Date().toISOString();
 
   const message = {
-    positionId, 
+    positionId,
     departure,
     destination,
     distance,
@@ -26,17 +26,18 @@ export const postJobPosition = async (positionData) => {
   };
 
   try {
-    await db.putItem(params);
+    console.log("Saving item:", JSON.stringify(params, null, 2));
+    await db.put(params).promise();
     return {
       success: true,
       message: "Position successfully added",
       positionId,
     };
   } catch (error) {
-    throw new Error("Error sending message: " + error.message);
+    console.error("DynamoDB Error:", error);
+    throw new Error("Error saving position: " + error.message);
   }
 };
-
 //--------------------------------
 
 export const getJobPosition = async (positionId) => {
