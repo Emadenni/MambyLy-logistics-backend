@@ -35,3 +35,28 @@ export const postJobPosition = async (positionData) => {
     throw new Error("Error sending message: " + error.message);
   }
 };
+
+//--------------------------------
+
+export const getJobPosition = async (positionId) => {
+  if (!positionIdId) { 
+    throw new Error("Position ID is required");
+  }
+
+  const params = {
+    TableName: process.env.JOB_POSITIONS_NAME,
+    Key: {
+      positionId,  
+    },
+  };
+
+  try {
+    const result = await db.getItem(params);
+    if (!result.Item) {
+      throw new Error("Position not found");
+    }
+    return result.Item;
+  } catch (error) {
+    throw new Error("Error retrieving message: " + error.message);
+  }
+};
