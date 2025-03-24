@@ -262,6 +262,18 @@ functions:
         - handlers/**
         - node_modules/**
 
+  updateJobPosition:
+    handler: handlers/jobPositions/updateJobPosition/index.handler
+    events:
+      - httpApi:
+          path: /jobPositions/{positionId}
+          method: put
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
   getAllJobPositions:
     handler: handlers/jobPositions/getAllJobPositions/index.handler
     events:

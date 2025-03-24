@@ -87,3 +87,47 @@ export const getAllJobPositions = async () => {
     throw new Error("Error retrieving positions: " + error.message);
   }
 };
+
+//------------------------------------------
+
+
+export const updateJobPosition = async (positionId) => {
+  if (!positionId) {
+    throw new Error("Position ID is required");
+  }
+
+  try {
+    const position = await getJobPosition(positionId);
+
+    if (!position) {
+      throw new Error("Position not found");
+    }
+
+    const updatedPosition = {
+      ...position, 
+      modifiedAt: new Date().toISOString(), 
+    };
+
+    const params = {
+      TableName: process.env.JOB_POSITIONS_NAME,
+      Key: {
+        positionId: updatedPosition.positionId,
+        createdAt: updatedPosition.createdAt,  
+      },
+      UpdateExpression: "SET #modifiedAt = :modifiedAt", 
+      ExpressionAttributeNames: {
+        "#modifiedAt": "modifiedAt", 
+      },
+      ExpressionAttributeValues: {
+        ":modifiedAt": updatedPosition.modifiedAt,
+      },
+      ReturnValues: "ALL_NEW", 
+    };
+
+    const result = await db.updateItem(params);
+
+    return result.Attributes; 
+  } catch (error) {
+    throw new Error("Error updating position: " + error.message);
+  }
+};
