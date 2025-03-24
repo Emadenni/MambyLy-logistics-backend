@@ -1,5 +1,5 @@
 import * as db from "../utils/dbUtils.js";
-import { v4 as uuidv4 } from "uuid";
+
 
 export const postJobPosition = async (positionData) => {
   const { positionId, departure, destination, distance, type } = positionData;
@@ -55,7 +55,7 @@ export const getJobPosition = async (positionId) => {
   
   try {
     
-    const result = await queryItems(params);
+    const result = await db.queryItems(params);
     if (!result.Items || result.Items.length === 0) {
       throw new Error("Position not found");
     }
