@@ -5,12 +5,10 @@ import { auth } from "../../../middlewares/auth.js";
 
 const updateJobPositionHandler = async (event) => {
   try {
-    const { positionId } = event.pathParameters;
-    const { createdAt } = JSON.parse(event.body);
+    const { positionId } = event.pathParameters; 
+    const updatedPosition = await updateJobPosition(positionId);
 
-    const updatedPosition = await updateJobPosition(positionId, createdAt);
-
-    return sendSuccessResponse(200, updatedPosition);
+    return sendSuccessResponse(200, updatedPosition); 
   } catch (error) {
     return sendError(500, error.message || "Internal server error");
   }

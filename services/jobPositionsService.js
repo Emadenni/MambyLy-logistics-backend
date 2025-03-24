@@ -100,7 +100,7 @@ export const deleteJobPosition = async (positionId, createdAt) => {
   };
 
   try {
-    await db.deleteItem(params).promise();
+    await db.deleteItem(params);
     return { success: true, message: `Position with ID ${positionId} deleted successfully` };
   } catch (error) {
     console.error("Error deleting position:", error);
