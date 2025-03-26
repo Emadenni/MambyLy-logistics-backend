@@ -1,11 +1,11 @@
-import Joi from "joi"; //to deploy
+import Joi from "joi";
 
 export const adminSchema = Joi.object({
   firstName: Joi.string().min(2).max(50).required(),
   lastName: Joi.string().min(2).max(50).required(),
   email: Joi.string().email().required(),
   password: Joi.string()
-    .min(6)  // Minimum 6 characters
+    .min(6)  
     .pattern(new RegExp('^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{6,}$'))  
     .required()
     .messages({
