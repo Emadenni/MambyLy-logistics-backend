@@ -1,12 +1,14 @@
 import * as db from "../utils/dbUtils.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const postJobPosition = async (positionData) => {
-  const { positionId, departure, destination, distance, type } = positionData;
+  const { departure, destination, distance, type } = positionData;
 
-  if (!positionId || !departure || !destination || !distance || !type) {
+  if (!departure || !destination || !distance || !type) {
     throw new Error("Missing required fields");
   }
 
+  const positionId = uuidv4();
   const createdAt = new Date().toISOString();
 
   const message = {
@@ -24,6 +26,7 @@ export const postJobPosition = async (positionData) => {
   };
 
   try {
+    console.log("Saving item:", JSON.stringify(params, null, 2));
     await db.putItem(params);
     return {
       success: true,
@@ -31,10 +34,10 @@ export const postJobPosition = async (positionData) => {
       positionId,
     };
   } catch (error) {
-    throw new Error("Error sending message: " + error.message);
+    console.error("DynamoDB Error:", error);
+    throw new Error("Error saving position: " + error.message);
   }
 };
-
 //--------------------------------
 
 export const getJobPosition = async (positionId) => {
