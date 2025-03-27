@@ -307,7 +307,7 @@ export const updateAdminPassword = async (adminId, newPassword) => {
     throw new Error("Password is required");
   }
 
-  const handlePassword = await bycrypt.hash(newPassword, 10);
+  const handlePassword = await bcrypt.hash(newPassword, 10);
 
   const params = {
     TableName: process.env.ADMIN_TABLE_NAME,
