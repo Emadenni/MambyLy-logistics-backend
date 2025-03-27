@@ -197,7 +197,7 @@ export const getAdmin = async (adminId) => {
 //----------------------------------------------------
 
 export const updateAdmin = async (adminId, updateData) => {
-  const { firstName, lastName, email, password } = updateData;
+  const { firstName, lastName, email } = updateData;
 
   let updateValues = {};
 
@@ -210,9 +210,7 @@ export const updateAdmin = async (adminId, updateData) => {
   if (email) {
     updateValues.email = email;
   }
-  if (password) {
-    updateValues.password = await bcrypt.hash(password, 10);
-  }
+
 
   if (Object.keys(updateValues).length === 0) {
     throw new Error("No fields to update");
