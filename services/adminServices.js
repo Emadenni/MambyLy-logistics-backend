@@ -217,31 +217,27 @@ export const updateAdmin = async (adminId, updateData) => {
   const params = {
     TableName: process.env.ADMIN_TABLE_NAME,
     Key: {
-      adminId: adminId,  
+      adminId: adminId,
     },
     UpdateExpression: `set ${Object.keys(updateValues)
-      .map((key, index) => `#${key} = :${key}`)
+      .map((key) => `#${key} = :${key}`)
       .join(", ")}`,
     ExpressionAttributeNames: Object.fromEntries(Object.keys(updateValues).map((key) => [`#${key}`, key])),
     ExpressionAttributeValues: Object.fromEntries(
-      Object.keys(updateValues).map((key) => [`:${key}`, updateValues[key]])  
+      Object.keys(updateValues).map((key) => [`:${key}`, updateValues[key]])
     ),
-    ReturnValues: "ALL_NEW",
+    ReturnValues: "ALL_NEW", 
   };
 
   try {
     const result = await db.updateItem(params);
-    
+
     if (!result.Attributes) {
       throw new Error("Admin update failed");
     }
 
-    return {
-      adminId: result.Attributes.adminId,
-      firstName: result.Attributes.firstName,
-      lastName: result.Attributes.lastName,
-      email: result.Attributes.email,
-    };
+
+    return result.Attributes;
   } catch (error) {
     throw new Error("Error updating admin: " + error.message);
   }
@@ -292,9 +288,9 @@ export const getAllAdmins = async () => {
 
   try {
     const result = await db.scanItems(params);
-    
-    const adminsWithoutPassword = result.Items.map(admin => {
-      const { password, ...adminWithoutPassword } = admin; 
+
+    const adminsWithoutPassword = result.Items.map((admin) => {
+      const { password, ...adminWithoutPassword } = admin;
       return adminWithoutPassword;
     });
 
@@ -316,7 +312,7 @@ export const updateAdminPassword = async (adminId, newPassword) => {
   const params = {
     TableName: process.env.ADMIN_TABLE_NAME,
     Key: {
-      admin: adminId,
+      adminId: adminId,
     },
     UpdateExpression: "set password = :password",
     ExpressionAttributeValues: {
@@ -327,18 +323,10 @@ export const updateAdminPassword = async (adminId, newPassword) => {
 
   try {
     const result = await db.updateItem(params);
+
     if (!result.Attributes) {
       throw new Error("Admin password update failed");
     }
-
-    return {
-      adminId: result.Attributes.adminId,
-      firstName: result.Attributes.firstName,
-      lastName: result.Attributes.lastName,
-      email: result.Attributes.email,
-      role: result.Attributes.role,
-      profileImageUrl: result.Attributes.profileImageUrl,
-    };
   } catch (error) {
     throw new Error("Error updating admin password: " + error.message);
   }
