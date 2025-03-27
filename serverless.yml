@@ -146,6 +146,18 @@ functions:
         - services/**
         - handlers/**
         - node_modules/**
+        
+  updateAdminPassword:
+    handler: handlers/admins/updateAdminPassword/index.handler
+    events:
+      - httpApi:
+          path: /admin/password/{adminId}
+          method: put
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
 
   postClientMessage:
     handler: handlers/clientsMessages/postClientMessage/index.handler

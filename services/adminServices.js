@@ -299,3 +299,43 @@ export const getAllAdmins = async () => {
     throw new Error("Error fetching admins: " + error.message);
   }
 };
+
+//---------------------------------------------
+
+export const updateAdminPassword = async (adminId, newPassword) => {
+  if (!newPassword) {
+    throw new Error("Password is required");
+  }
+
+  const handlePassword = await bycrypt.hash(newPassword, 10);
+
+  const params = {
+    TableName: process.env.ADMIN_TABLE_NAME,
+    Key: {
+      admin: adminId,
+    },
+    UpdateExpression: "set password = :password",
+    ExpressionAttributeValues: {
+      ":password": hashedPassword,
+    },
+    ReturnValues: "ALL_NEW",
+  };
+
+  try {
+    const result = await db.updateItem(params);
+    if (!result.Attributes) {
+      throw new Error("Admin password update failed");
+    }
+
+    return {
+      adminId: result.Attributes.adminId,
+      firstName: result.Attributes.firstName,
+      lastName: result.Attributes.lastName,
+      email: result.Attributes.email,
+      role: result.Attributes.role,
+      profileImageUrl: result.Attributes.profileImageUrl,
+    };
+  } catch (error) {
+    throw new Error("Error updating admin password: " + error.message);
+  }
+};
