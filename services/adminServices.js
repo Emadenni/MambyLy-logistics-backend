@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-
 export const registerSuperAdmin = async (adminData) => {
   const { firstName, lastName, email, password, profileImage } = adminData;
 
@@ -45,7 +44,7 @@ export const registerSuperAdmin = async (adminData) => {
     email,
     password: hashedPassword,
     profileImageUrl: imageUrl,
-    role: "superadmin", 
+    role: "superadmin",
     createdAt: new Date().toISOString(),
   };
 
@@ -57,7 +56,7 @@ export const registerSuperAdmin = async (adminData) => {
   try {
     await db.putItem(params);
 
-    return { adminId, firstName, lastName, email, role: "superadmin" }; 
+    return { adminId, firstName, lastName, email, role: "superadmin" };
   } catch (error) {
     throw new Error("Error registering superadmin: " + error.message);
   }
@@ -211,7 +210,6 @@ export const updateAdmin = async (adminId, updateData) => {
     updateValues.email = email;
   }
 
-
   if (Object.keys(updateValues).length === 0) {
     throw new Error("No fields to update");
   }
@@ -233,6 +231,7 @@ export const updateAdmin = async (adminId, updateData) => {
 
   try {
     const result = await db.updateItem(params);
+    
     if (!result.Attributes) {
       throw new Error("Admin update failed");
     }
@@ -242,7 +241,6 @@ export const updateAdmin = async (adminId, updateData) => {
       firstName: result.Attributes.firstName,
       lastName: result.Attributes.lastName,
       email: result.Attributes.email,
-      profileImageUrl: result.Attributes.profileImageUrl, 
     };
   } catch (error) {
     throw new Error("Error updating admin: " + error.message);
@@ -294,7 +292,13 @@ export const getAllAdmins = async () => {
 
   try {
     const result = await db.scanItems(params);
-    return result.Items;
+    
+    const adminsWithoutPassword = result.Items.map(admin => {
+      const { password, ...adminWithoutPassword } = admin; 
+      return adminWithoutPassword;
+    });
+
+    return adminsWithoutPassword;
   } catch (error) {
     throw new Error("Error fetching admins: " + error.message);
   }
@@ -307,7 +311,7 @@ export const updateAdminPassword = async (adminId, newPassword) => {
     throw new Error("Password is required");
   }
 
-  const handlePassword = await bcrypt.hash(newPassword, 10);
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
 
   const params = {
     TableName: process.env.ADMIN_TABLE_NAME,
