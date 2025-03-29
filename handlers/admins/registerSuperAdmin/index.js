@@ -3,7 +3,7 @@ import { registerSuperAdmin } from "../../../services/adminServices.js";
 import { sendSuccessResponse, sendError } from "../../../responses/index.js";
 import { validation } from "../../../middlewares/validation.js";
 import { adminSchema } from "../../../utils/adminSchema.js";
-import { auth } from "../../../middlewares/auth.js";
+
 
 const registerSuperAdminHandler = async (event) => {
   try {
@@ -23,4 +23,4 @@ const registerSuperAdminHandler = async (event) => {
   }
 };
 
-export const handler = middy(registerSuperAdminHandler).use(auth()).use(validation(adminSchema)); 
+export const handler = middy(registerSuperAdminHandler).use(validation(adminSchema)); 

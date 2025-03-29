@@ -38,6 +38,7 @@ provider:
         - dynamodb:*
       Resource: "*"
 
+functions:
   registerAdmin:
     handler: handlers/admins/registerAdmin/index.handler
     events:
@@ -133,7 +134,7 @@ provider:
         - services/**
         - handlers/**
         - node_modules/**
-        
+
   updateAdminPassword:
     handler: handlers/admins/updateAdminPassword/index.handler
     events:
@@ -225,7 +226,7 @@ provider:
         - handlers/**
         - node_modules/**
 
-  getAlljobMessages:
+  getAllJobMessages:
     handler: handlers/jobMessages/getAllJobMessages/index.handler
     events:
       - httpApi:
@@ -353,6 +354,17 @@ resources:
           - AttributeName: createdAt
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        TimeToLiveSpecification:
-          AttributeName: createdAt
-          Enabled: true
+
+outputs:
+  adminTableName:
+    Description: "Admin table name"
+    Value: ${self:provider.environment.ADMIN_TABLE_NAME}
+  clientsMessagesTableName:
+    Description: "Clients messages table name"
+    Value: ${self:provider.environment.CLIENTS_MESSAGES_NAME}
+  jobMessagesTableName:
+    Description: "Job messages table name"
+    Value: ${self:provider.environment.JOB_MESSAGES_NAME}
+  jobPositionsTableName:
+    Description: "Job positions table name"
+    Value: ${self:provider.environment.JOB_POSITIONS_NAME}
