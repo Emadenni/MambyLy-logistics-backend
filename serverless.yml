@@ -1,11 +1,31 @@
-service: db-booker-backend  
+service: MambyLy-Logistics
 
 provider:
   name: aws
-  runtime: nodejs18.x  
-  region: eu-north-1  
-  profile: personal  
-  stage: dev
+  runtime: nodejs20.x
+  region: ${env:AWS_REGION}
+  stage: ${opt:stage, 'dev'}
+  environment:
+    BUCKET_NAME: ${env:S3_BUCKET_BASE}-${self:provider.stage}
+    ADMIN_TABLE_NAME: ${env:ADMIN_TABLE_BASE}-${self:provider.stage}
+    CLIENTS_MESSAGES_NAME: ${env:CLIENTS_MESSAGES_BASE}-${self:provider.stage}
+    JOB_MESSAGES_NAME: ${env:JOB_MESSAGES_BASE}-${self:provider.stage}
+    JOB_POSITIONS_NAME: ${env:JOB_POSITIONS_BASE}-${self:provider.stage}
+    JWT_SECRET_KEY: ${env:JWT_SECRET_KEY}
+
+  httpApi:
+    cors:
+      allowedOrigins:
+        - "*"
+      allowedHeaders:
+        - Content-Type
+        - authorization
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
 
   iamRoleStatements:
     - Effect: Allow
@@ -15,15 +35,324 @@ provider:
         - lambda:UpdateFunctionCode
         - apiGateway:*
         - s3:*
+        - dynamodb:*
       Resource: "*"
 
-functions:
-  test:
-    handler: handlers/test/test.handler 
+  registerAdmin:
+    handler: handlers/admins/registerAdmin/index.handler
     events:
-      - http:
-          path: test 
-          method: get  
+      - httpApi:
+          path: /admin/register
+          method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
 
-plugins:
-  - serverless-offline
+  registerSuperAdmin:
+    handler: handlers/admins/registerSuperAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/register-superadmin
+          method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  loginAdmin:
+    handler: handlers/admins/loginAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/login
+          method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getAdmin:
+    handler: handlers/admins/getAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/{adminId}
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getAllAdmins:
+    handler: handlers/admins/getAllAdmins/index.handler
+    events:
+      - httpApi:
+          path: /admin
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  deleteAdmin:
+    handler: handlers/admins/deleteAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/{adminId}
+          method: delete
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  updateProfileImg:
+    handler: handlers/admins/updateProfileImg/index.handler
+    events:
+      - httpApi:
+          path: /admin/updateProfileImage/{adminId}
+          method: put
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  updateAdmin:
+    handler: handlers/admins/updateAdmin/index.handler
+    events:
+      - httpApi:
+          path: /admin/{adminId}
+          method: put
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+        
+  updateAdminPassword:
+    handler: handlers/admins/updateAdminPassword/index.handler
+    events:
+      - httpApi:
+          path: /admin/password/{adminId}
+          method: put
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  postClientMessage:
+    handler: handlers/clientsMessages/postClientMessage/index.handler
+    events:
+      - httpApi:
+          path: /clientsMessages
+          method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  deleteClientMessage:
+    handler: handlers/clientsMessages/deleteClientMessage/index.handler
+    events:
+      - httpApi:
+          path: /clientsMessages/{clientMessageId}
+          method: delete
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getClientMessage:
+    handler: handlers/clientsMessages/getClientMessage/index.handler
+    events:
+      - httpApi:
+          path: /clientsMessages/{clientMessageId}
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getAllClientsMessages:
+    handler: handlers/clientsMessages/getAllClientsMessages/index.handler
+    events:
+      - httpApi:
+          path: /clientsMessages
+          method: get
+
+  postJobMessage:
+    handler: handlers/jobMessages/postJobMessage/index.handler
+    events:
+      - httpApi:
+          path: /jobMessages
+          method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  deleteJobMessage:
+    handler: handlers/jobMessages/deleteJobMessage/index.handler
+    events:
+      - httpApi:
+          path: /jobMessages/{jobMessageId}
+          method: delete
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getJobMessage:
+    handler: handlers/jobMessages/getJobMessage/index.handler
+    events:
+      - httpApi:
+          path: /jobMessages/{jobMessageId}
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getAlljobMessages:
+    handler: handlers/jobMessages/getAllJobMessages/index.handler
+    events:
+      - httpApi:
+          path: /jobMessages
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  postJobPosition:
+    handler: handlers/jobPositions/postJobPosition/index.handler
+    events:
+      - httpApi:
+          path: /jobPositions
+          method: post
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getJobPosition:
+    handler: handlers/jobPositions/getJobPosition/index.handler
+    events:
+      - httpApi:
+          path: /jobPositions/{positionId}
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  deleteJobPosition:
+    handler: handlers/jobPositions/deleteJobPosition/index.handler
+    events:
+      - httpApi:
+          path: /jobPositions/{positionId}
+          method: delete
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+  getAllJobPositions:
+    handler: handlers/jobPositions/getAllJobPositions/index.handler
+    events:
+      - httpApi:
+          path: /jobPositions
+          method: get
+    package:
+      include:
+        - services/**
+        - handlers/**
+        - node_modules/**
+
+resources:
+  Resources:
+    AdminTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.ADMIN_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: adminId
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: adminId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: email-index
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    ClientsMessagesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.CLIENTS_MESSAGES_NAME}
+        AttributeDefinitions:
+          - AttributeName: clientMessageId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: clientMessageId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: sentAt
+          Enabled: true
+
+    JobMessagesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.JOB_MESSAGES_NAME}
+        AttributeDefinitions:
+          - AttributeName: jobMessageId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: jobMessageId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: sentAt
+          Enabled: true
+
+    JobPositionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.JOB_POSITIONS_NAME}
+        AttributeDefinitions:
+          - AttributeName: positionId
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: positionId
+            KeyType: HASH
+          - AttributeName: createdAt
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: createdAt
+          Enabled: true

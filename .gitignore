@@ -1,1 +1,20 @@
-node_modules
+# Node.js dependencies
+node_modules/
+
+# Build directories
+/dist
+/build
+
+# Serverless directories
+.serverless/
+.webpack/
+
+# IDE config files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Environment files
+.env
