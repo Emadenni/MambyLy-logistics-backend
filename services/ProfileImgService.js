@@ -38,7 +38,7 @@ export const uploadProfileImg = async (base64Image, adminId, mimetype) => {
   const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
   const buffer = Buffer.from(base64Data, "base64");
   const fileExtension = getFileExtension(mimetype);
-  const fileName = `profile-images/${adminId}.${fileExtension}`;
+  const fileName = `profile-images/${adminId}-${Date.now()}.${fileExtension}`;
 
   const params = {
     Bucket: bucketName,

@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-
 export const registerSuperAdmin = async (adminData) => {
   const { firstName, lastName, email, password, profileImage } = adminData;
 
@@ -45,7 +44,7 @@ export const registerSuperAdmin = async (adminData) => {
     email,
     password: hashedPassword,
     profileImageUrl: imageUrl,
-    role: "superadmin", 
+    role: "superadmin",
     createdAt: new Date().toISOString(),
   };
 
@@ -57,7 +56,7 @@ export const registerSuperAdmin = async (adminData) => {
   try {
     await db.putItem(params);
 
-    return { adminId, firstName, lastName, email, role: "superadmin" }; 
+    return { adminId, firstName, lastName, email, role: "superadmin" };
   } catch (error) {
     throw new Error("Error registering superadmin: " + error.message);
   }
@@ -197,7 +196,7 @@ export const getAdmin = async (adminId) => {
 //----------------------------------------------------
 
 export const updateAdmin = async (adminId, updateData) => {
-  const { firstName, lastName, email, password } = updateData;
+  const { firstName, lastName, email } = updateData;
 
   let updateValues = {};
 
@@ -210,9 +209,6 @@ export const updateAdmin = async (adminId, updateData) => {
   if (email) {
     updateValues.email = email;
   }
-  if (password) {
-    updateValues.password = await bcrypt.hash(password, 10);
-  }
 
   if (Object.keys(updateValues).length === 0) {
     throw new Error("No fields to update");
@@ -221,31 +217,27 @@ export const updateAdmin = async (adminId, updateData) => {
   const params = {
     TableName: process.env.ADMIN_TABLE_NAME,
     Key: {
-      adminId: adminId,  
+      adminId: adminId,
     },
     UpdateExpression: `set ${Object.keys(updateValues)
-      .map((key, index) => `#${key} = :${key}`)
+      .map((key) => `#${key} = :${key}`)
       .join(", ")}`,
     ExpressionAttributeNames: Object.fromEntries(Object.keys(updateValues).map((key) => [`#${key}`, key])),
     ExpressionAttributeValues: Object.fromEntries(
-      Object.keys(updateValues).map((key) => [`:${key}`, updateValues[key]])  
+      Object.keys(updateValues).map((key) => [`:${key}`, updateValues[key]])
     ),
-    ReturnValues: "ALL_NEW",
+    ReturnValues: "ALL_NEW", 
   };
 
   try {
     const result = await db.updateItem(params);
+
     if (!result.Attributes) {
       throw new Error("Admin update failed");
     }
 
-    return {
-      adminId: result.Attributes.adminId,
-      firstName: result.Attributes.firstName,
-      lastName: result.Attributes.lastName,
-      email: result.Attributes.email,
-      profileImageUrl: result.Attributes.profileImageUrl, 
-    };
+
+    return result.Attributes;
   } catch (error) {
     throw new Error("Error updating admin: " + error.message);
   }
@@ -296,8 +288,46 @@ export const getAllAdmins = async () => {
 
   try {
     const result = await db.scanItems(params);
-    return result.Items;
+
+    const adminsWithoutPassword = result.Items.map((admin) => {
+      const { password, ...adminWithoutPassword } = admin;
+      return adminWithoutPassword;
+    });
+
+    return adminsWithoutPassword;
   } catch (error) {
     throw new Error("Error fetching admins: " + error.message);
+  }
+};
+
+//---------------------------------------------
+
+export const updateAdminPassword = async (adminId, newPassword) => {
+  if (!newPassword) {
+    throw new Error("Password is required");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  const params = {
+    TableName: process.env.ADMIN_TABLE_NAME,
+    Key: {
+      adminId: adminId,
+    },
+    UpdateExpression: "set password = :password",
+    ExpressionAttributeValues: {
+      ":password": hashedPassword,
+    },
+    ReturnValues: "ALL_NEW",
+  };
+
+  try {
+    const result = await db.updateItem(params);
+
+    if (!result.Attributes) {
+      throw new Error("Admin password update failed");
+    }
+  } catch (error) {
+    throw new Error("Error updating admin password: " + error.message);
   }
 };
