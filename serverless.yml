@@ -38,19 +38,6 @@ provider:
         - dynamodb:*
       Resource: "*"
 
-functions:
-  test:
-    handler: handlers/test/test.handler
-    events:
-      - httpApi:
-          path: /test
-          method: get
-    package:
-      include:
-        - services/**
-        - handlers/**
-        - node_modules/**
-
   registerAdmin:
     handler: handlers/admins/registerAdmin/index.handler
     events:
